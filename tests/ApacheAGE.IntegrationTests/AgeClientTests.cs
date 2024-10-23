@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace ApacheAGE.IntegrationTests;
 
-internal class AgeClientTests: TestBase
+internal class AgeClientTests : TestBase
 {
     [Test]
     public async Task OpenConnectionAsync_Should_CreateExtensionInDatabase()
@@ -29,6 +29,24 @@ internal class AgeClientTests: TestBase
         var graphName = await CreateTempGraphAsync();
 
         await client.OpenConnectionAsync();
+        await using var dataReader = await client.ExecuteQueryAsync(
+$@"SELECT * FROM cypher('{graphName}', $$
+    RETURN 1
+$$) AS (num agtype);");
+
+        Assert.That(dataReader, Is.Not.Null);
+        Assert.That(dataReader.HasRows, Is.True);
+
+        await DropTempGraphAsync(graphName);
+    }
+
+    [Test]
+    public async Task ExecuteQueryAsync_AsNonSuperUser_With_NoParameters_Should_ReturnDataReader()
+    {
+        await using var client = CreateAgeClient();
+        var graphName = await CreateTempGraphAsync();
+
+        await client.OpenConnectionAsync(false);
         await using var dataReader = await client.ExecuteQueryAsync(
 $@"SELECT * FROM cypher('{graphName}', $$
     RETURN 1

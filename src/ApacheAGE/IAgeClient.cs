@@ -31,6 +31,22 @@ namespace ApacheAGE
         Task OpenConnectionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Opens connection to the database and performs the necessary actions to create 
+        /// and load the AGE extension in the database. 
+        /// </summary>
+        /// <param name="superUser">
+        /// Indicates if the connection should be made as a super user.
+        /// If <see langword="false"/>, the AGE extension will be loaded from $libdir/plugins/ago.so.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Token for propagating a notification  stop the running operation.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Task"/> for monitoring the progress of the operation.
+        /// </returns>
+        Task OpenConnectionAsync(bool superUser, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Create a graph if it doesn't exist.
         /// </summary>
         /// <param name="graphName">

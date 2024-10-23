@@ -9,7 +9,7 @@ namespace ApacheAGE
     /// <summary>
     /// Client for use with the Apache AGE extension for PostgreSQL.
     /// </summary>
-    public class AgeClient: IAgeClient, IDisposable, IAsyncDisposable
+    public class AgeClient : IAgeClient, IDisposable, IAsyncDisposable
     {
         private NpgsqlDataSource? _dataSource;
         private AgeConfiguration? _configuration;
@@ -35,10 +35,15 @@ namespace ApacheAGE
 
         public async Task OpenConnectionAsync(CancellationToken cancellationToken = default)
         {
+            await OpenConnectionAsync(true, cancellationToken);
+        }
+
+        public async Task OpenConnectionAsync(bool superUser, CancellationToken cancellationToken = default)
+        {
             _connection = await OpenConnectionInternalAsync(cancellationToken);
             await CreateExtensionAsync(_connection, cancellationToken);
             await AddAgCatalogToSearchPath(_connection, cancellationToken);
-            await LoadExtensionAsync(_connection, cancellationToken);
+            await LoadExtensionAsync(_connection, superUser, cancellationToken);
         }
 
         public async Task CloseConnectionAsync(CancellationToken cancellationToken = default)
@@ -474,15 +479,19 @@ namespace ApacheAGE
 
         private async Task LoadExtensionAsync(
             NpgsqlConnection _connection,
+            bool superUser = true,
             CancellationToken cancellationToken = default)
         {
             try
             {
+                string loadAgeCommand = superUser
+                    ? "LOAD 'age';"
+                    : "LOAD '$libdir/plugins/age';";
                 await using var batch = new NpgsqlBatch(_connection)
                 {
                     BatchCommands =
                     {
-                        new("LOAD 'age';"),
+                        new(loadAgeCommand),
                         new("SET search_path = ag_catalog, \"$user\", public;")
                     }
                 };
