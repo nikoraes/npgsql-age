@@ -37,13 +37,13 @@ jobs:
           git clone --depth 1 --branch release/PG16/1.5.0 https://github.com/apache/age.git ~/age16source
           cd ~/age16source
           make PG_CONFIG=$HOME/pg16/bin/pg_config install
+          mkdir -p $HOME/pg16/lib/postgresql/plugins && ln -s $HOME/pg16/lib/postgresql/age.so $HOME/pg16/lib/postgresql/plugins/age.so
           cd ~/pg16
           mkdir data
           bin/initdb -D data
           bin/pg_ctl -D data -l logfile start
           bin/createuser -s postgres
           bin/createdb -O "postgres" agedotnet_tests
-          mkdir -p $HOME/pg16/lib/plugins && ln -s $HOME/pg16/lib/age.so $HOME/pg16/lib/plugins/age.so
 
       - uses: actions/checkout@v4
 
