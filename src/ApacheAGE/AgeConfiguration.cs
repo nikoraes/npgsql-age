@@ -4,6 +4,8 @@
     {
         public AgeLoggerConfiguration Logger { get; set; }
 
+        public bool SuperUser { get; set; } = true;
+
         public AgeConfiguration(AgeLoggerConfiguration logger) => Logger = logger;
     }
 }

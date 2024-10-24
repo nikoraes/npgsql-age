@@ -9,7 +9,7 @@ namespace ApacheAGE
     /// <summary>
     /// Client for use with the Apache AGE extension for PostgreSQL.
     /// </summary>
-    public class AgeClient: IAgeClient, IDisposable, IAsyncDisposable
+    public class AgeClient : IAgeClient, IDisposable, IAsyncDisposable
     {
         private NpgsqlDataSource? _dataSource;
         private AgeConfiguration? _configuration;
@@ -24,6 +24,13 @@ namespace ApacheAGE
             var builder = new NpgsqlDataSourceBuilder(connectionString);
 
             builder.UseAge();
+
+            builder.UsePhysicalConnectionInitializer(null, async (conn) =>
+            {
+                await CreateExtensionAsync(conn);
+                await AddAgCatalogToSearchPath(conn);
+                await LoadExtensionAsync(conn);
+            });
 
             _dataSource = builder.Build();
             _configuration = configuration;
