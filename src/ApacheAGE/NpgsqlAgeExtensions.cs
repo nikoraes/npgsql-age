@@ -28,7 +28,6 @@ namespace ApacheAGE
 
     public static class NpgsqlDataSourceAgeExtensions
     {
-
         public static NpgsqlCommand CreateGraphCommand(this NpgsqlDataSource dataSource, string graphName)
         {
             NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.create_graph($1);");
@@ -52,19 +51,58 @@ namespace ApacheAGE
 
         public static NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graph, string cypher)
         {
-            string asPart = GenerateAsPart(cypher);
+            string asPart = CypherHelpers.GenerateAsPart(cypher);
             string query = $"SELECT * FROM cypher('{graph}', $$ {cypher} $$) as {asPart};";
             NpgsqlCommand command = dataSource.CreateCommand(query);
             return command;
         }
+    }
 
-        private static string GenerateAsPart(string cypher)
+    public static class NpgsqlConnectionAgeExtensions
+    {
+        public static NpgsqlCommand CreateGraphCommand(this NpgsqlConnection connection, string graphName)
+        {
+            NpgsqlCommand command = connection.CreateCommand();
+            command.CommandText = $"SELECT * FROM ag_catalog.create_graph($1);";
+            command.Parameters.AddWithValue("name", graphName);
+            return command;
+        }
+
+        public static NpgsqlCommand DropGraphCommand(this NpgsqlConnection connection, string graphName)
+        {
+            NpgsqlCommand command = connection.CreateCommand();
+            command.CommandText = $"SELECT * FROM ag_catalog.drop_graph($1);";
+            command.Parameters.AddWithValue("name", graphName);
+            return command;
+        }
+
+        public static NpgsqlCommand GraphExistsCommand(this NpgsqlConnection connection, string graphName)
+        {
+            NpgsqlCommand command = connection.CreateCommand();
+            command.CommandText = $"SELECT * FROM ag_catalog.ag_graph WHERE name = $1;";
+            command.Parameters.AddWithValue("name", graphName);
+            return command;
+        }
+
+        public static NpgsqlCommand CreateCypherCommand(this NpgsqlConnection connection, string graph, string cypher)
+        {
+            string asPart = CypherHelpers.GenerateAsPart(cypher);
+            string query = $"SELECT * FROM cypher('{graph}', $$ {cypher} $$) as {asPart};";
+            NpgsqlCommand command = connection.CreateCommand();
+            command.CommandText = query;
+            return command;
+        }
+    }
+
+    internal static class CypherHelpers
+    {
+        internal static string GenerateAsPart(string cypher)
         {
             // Extract the return part of the Cypher query
             var match = Regex.Match(cypher, @"RETURN\s+(.*)", RegexOptions.IgnoreCase);
             if (!match.Success)
             {
-                throw new ArgumentException("Invalid Cypher query: RETURN clause not found.");
+                return "(result agtype)";
             }
 
             // Split the return values
