@@ -2,19 +2,19 @@
 
   <PropertyGroup>
 
-    <Authors>Emmanuel Allison</Authors>
+    <Authors>Emmanuel Allison, Niko Raes</Authors>
     <Description>ApacheAGE is a .NET client for use with the AGE extension for PostgreSQL.</Description>
     <PackageTags>postgres;postgresql;apache-age;graph</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.0.0</Version>
-    <TargetFrameworks>net8.0;net7.0;net6.0;net5.0</TargetFrameworks>
+    <Version>2.0.0</Version>
+    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>ApacheAGE</Title>
     <Company />
     <PackageId>ApacheAGE</PackageId>
-    <RepositoryUrl>https://github.com/Allison-E/pg-age</RepositoryUrl>
+    <RepositoryUrl>https://github.com/nikoraes/pg-age</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <IncludeSymbols>False</IncludeSymbols>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="8.0.3" />
+    <PackageReference Include="Npgsql" Version="8.0.5" />
   </ItemGroup>
 
 </Project>

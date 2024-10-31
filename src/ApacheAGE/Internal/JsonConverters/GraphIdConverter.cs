@@ -3,9 +3,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ApacheAGE.Types;
 
-namespace ApacheAGE.JsonConverters
+namespace ApacheAGE.Internal.JsonConverters
 {
-    internal class GraphIdConverter: JsonConverter<GraphId>
+    internal class GraphIdConverter : JsonConverter<GraphId>
     {
         public override GraphId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

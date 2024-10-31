@@ -3,13 +3,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ApacheAGE.Types;
 
-namespace ApacheAGE.JsonConverters
+namespace ApacheAGE.Internal.JsonConverters
 {
     /// <summary>
     /// A custom converter to convert JSON objects to vertices and edges in a path and
     /// vice versa.
     /// </summary>
-    internal class PathObjectConverter: JsonConverter<object>
+    internal class PathObjectConverter : JsonConverter<object>
     {
         private int _counter = 0;
 

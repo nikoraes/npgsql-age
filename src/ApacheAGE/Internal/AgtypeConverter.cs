@@ -3,15 +3,15 @@ using System.Text;
 using ApacheAGE.Types;
 using Npgsql.Internal;
 
-namespace ApacheAGE.Converters
+namespace ApacheAGE.Internal
 {
 #pragma warning disable NPG9001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-    internal class AgtypeConverter: PgBufferedConverter<Agtype>
+    internal class AgtypeConverter : PgBufferedConverter<Agtype>
     {
         public override bool CanConvert(DataFormat format, out BufferRequirements bufferRequirements)
         {
             bufferRequirements = BufferRequirements.None;
-            return format is DataFormat.Text;
+            return format is DataFormat.Text || format is DataFormat.Binary;
         }
 
         /// <summary>

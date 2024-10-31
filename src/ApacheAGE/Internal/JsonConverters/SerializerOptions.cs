@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ApacheAGE.JsonConverters
+namespace ApacheAGE.Internal.JsonConverters
 {
     internal static class SerializerOptions
     {

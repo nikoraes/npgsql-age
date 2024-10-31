@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ApacheAGE.JsonConverters
+namespace ApacheAGE.Internal.JsonConverters
 {
     /// <summary>
     /// A custom converter to infer object types from their JSON token type.
@@ -13,7 +13,7 @@ namespace ApacheAGE.JsonConverters
     /// <see langword="double"/>).
     /// </para>
     /// </summary>
-    internal class InferredObjectConverter: JsonConverter<object>
+    internal class InferredObjectConverter : JsonConverter<object>
     {
         public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -35,7 +35,7 @@ namespace ApacheAGE.JsonConverters
                             return double.NaN;
                     }
                     return reader.GetString()!;
-                
+
                 // Parse number.
                 // First, try to parse it as an int. If that doesn't work, parse it as a long.
                 // And if that doesn't work, go on to parse it as a decimal.

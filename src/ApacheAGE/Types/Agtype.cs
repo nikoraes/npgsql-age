@@ -1,4 +1,4 @@
-﻿using ApacheAGE.JsonConverters;
+﻿using ApacheAGE.Internal.JsonConverters;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -63,7 +63,7 @@ namespace ApacheAGE.Types
 
             return float.Parse(_value);
         }
-        
+
         /// <summary>
         /// Return the agtype value as a double.
         /// </summary>
@@ -161,7 +161,7 @@ namespace ApacheAGE.Types
         /// Thrown when the value of the agtype cannot be correctly parsed.
         /// </exception>
         public long GetInt64() => long.Parse(_value);
-        
+
         /// <summary>
         /// Return the agtype value as a ulong.
         /// </summary>
@@ -226,7 +226,7 @@ namespace ApacheAGE.Types
             if (!isValidVertex)
                 throw new FormatException("Cannot convert agtype to vertex. Agtype is not a valid vertex.");
 
-            var json = _value.Replace(Vertex.FOOTER, "");
+            var json = _value.Replace(Vertex.FOOTER, "").Trim('\u0001');
             var vertex = JsonSerializer.Deserialize<Vertex>(json, SerializerOptions.Default);
 
             return vertex!;
@@ -247,7 +247,7 @@ namespace ApacheAGE.Types
             if (!isValidEdge)
                 throw new FormatException("Cannot convert agtype to edge. Agtype is not a valid edge.");
 
-            var json = _value.Replace(Edge.FOOTER, "");
+            var json = _value.Replace(Edge.FOOTER, "").Trim('\u0001');
             var edge = JsonSerializer.Deserialize<Edge>(json, SerializerOptions.Default);
 
             return edge!;
@@ -276,8 +276,8 @@ namespace ApacheAGE.Types
                     .Replace(Edge.FOOTER, "");
                 var path = JsonSerializer.Deserialize<object[]>(json, SerializerOptions.PathSerializer);
 
-                return path is null 
-                    ? throw new AgeException("Path cannot be null.")
+                return path is null
+                    ? throw new Exception("Path cannot be null.")
                     : new Path(path);
             }
             catch (JsonException e)
@@ -289,29 +289,29 @@ namespace ApacheAGE.Types
 
         #region Explicit operators
         public static explicit operator byte(Agtype agtype) => agtype.GetByte();
-        
+
         public static explicit operator sbyte(Agtype agtype) => agtype.GetSByte();
-        
+
         public static explicit operator short(Agtype agtype) => agtype.GetInt16();
-        
+
         public static explicit operator ushort(Agtype agtype) => agtype.GetUInt16();
-        
+
         public static explicit operator int(Agtype agtype) => agtype.GetInt32();
-        
+
         public static explicit operator uint(Agtype agtype) => agtype.GetUInt32();
-        
+
         public static explicit operator long(Agtype agtype) => agtype.GetInt64();
-        
+
         public static explicit operator ulong(Agtype agtype) => agtype.GetUInt64();
-        
+
         public static explicit operator decimal(Agtype agtype) => agtype.GetDecimal();
-        
+
         public static explicit operator float(Agtype agtype) => agtype.GetFloat();
-        
+
         public static explicit operator double(Agtype agtype) => agtype.GetDouble();
-        
+
         public static explicit operator string(Agtype agtype) => agtype.GetString();
-        
+
         public static explicit operator List<object?>(Agtype agtype) => agtype.GetList();
 
         public static explicit operator Vertex(Agtype agtype) => agtype.GetVertex();
