@@ -29,8 +29,8 @@ namespace ApacheAGE.Types
 
         public readonly override string ToString()
         {
-            string serialisedProperties = JsonSerializer.Serialize(Properties);
-            string result = $@"{{""id"": {Id.Value}, ""label"": ""{Label}"", ""properties"": {serialisedProperties}}}::vertex";
+            string serializedProperties = JsonSerializer.Serialize(Properties);
+            string result = $@"{{""id"": {Id.Value}, ""label"": ""{Label}"", ""properties"": {serializedProperties}}}::vertex";
 
             return result;
         }

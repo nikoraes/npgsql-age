@@ -42,8 +42,8 @@ namespace ApacheAGE.Types
 
         public readonly override string ToString()
         {
-            string serialisedProperties = JsonSerializer.Serialize(Properties);
-            string result = $@"{{""id"": {Id.Value}, ""label"": ""{Label}"", ""end_id"": {EndId.Value}, ""start_id"": {StartId.Value}, ""properties"": {serialisedProperties}}}::edge";
+            string serializedProperties = JsonSerializer.Serialize(Properties);
+            string result = $@"{{""id"": {Id.Value}, ""label"": ""{Label}"", ""end_id"": {EndId.Value}, ""start_id"": {StartId.Value}, ""properties"": {serializedProperties}}}::edge";
 
             return result;
         }
