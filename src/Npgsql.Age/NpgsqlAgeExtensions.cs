@@ -15,7 +15,7 @@ namespace Npgsql.Age
         /// <param name="builder">Npgsql data source builder.</param>
         /// <param name="superUser">Whether to use super user privileges.</param>
         /// <returns></returns>
-        public static INpgsqlTypeMapper UseAge(this NpgsqlDataSourceBuilder builder, bool superUser = true)
+        public static NpgsqlDataSourceBuilder UseAge(this NpgsqlDataSourceBuilder builder, bool superUser = true)
         {
             builder.AddTypeInfoResolverFactory(new AgtypeResolverFactory());
             builder.UsePhysicalConnectionInitializer(

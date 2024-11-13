@@ -18,8 +18,9 @@ using Npgsql.Age.Types;
 var connectionString = "Host=server;Port=5432;Username=user;Password=pass;Database=sample1";
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
-dataSourceBuilder.UseAge();
-await using var dataSource = dataSourceBuilder.Build();
+await using var dataSource = dataSourceBuilder
+    .UseAge()
+    .Build();
 
 // Create graph
 await using (var cmd = dataSource.CreateGraphCommand("graph1"))
