@@ -1,6 +1,6 @@
-# Npgsql.Age
+# Konnektr.Npgsql.Age
 
-[![Nuget](https://img.shields.io/nuget/v/Npgsql.Age?color=blue)](https://www.nuget.org/packages/Npgsql.Age/)
+[![Nuget](https://img.shields.io/nuget/v/Konnektr.Npgsql.Age?color=blue)](https://www.nuget.org/packages/Konnektr.Npgsql.Age/)
 
 ## What is Apache AGE?
 

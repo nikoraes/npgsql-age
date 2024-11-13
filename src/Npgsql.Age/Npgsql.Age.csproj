@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>Npgsql.Age</PackageId>
+    <PackageId>Konnektr.Npgsql.Age</PackageId>
     <PackageTags>postgres;postgresql;apache-age;graph</PackageTags>
     <Authors>Niko Raes, Emmanuel Allison</Authors>
     <Description>A plugin that extends Npgsql to enable using npgsql the ApacheAge extension for PostgreSQL.</Description>
