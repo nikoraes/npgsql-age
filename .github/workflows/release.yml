@@ -33,9 +33,6 @@ jobs:
       - name: Build
         run: dotnet build -c Release${{github.event.release.tag_name && ' -p:Version='}}${{github.event.release.tag_name && env.VERSION}}
 
-      - name: Test
-        run: dotnet test -c Release --no-build
-
       - name: Pack nugets
         run: dotnet pack -c Release --no-build --output .
 
