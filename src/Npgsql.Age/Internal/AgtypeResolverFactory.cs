@@ -1,10 +1,9 @@
 ﻿using System;
-using ApacheAGE.Internal;
-using ApacheAGE.Types;
+using Npgsql.Age.Types;
 using Npgsql.Internal;
 using Npgsql.Internal.Postgres;
 
-namespace ApacheAGE.Resolvers
+namespace Npgsql.Age.Internal
 {
 #pragma warning disable NPG9001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     /// <summary>

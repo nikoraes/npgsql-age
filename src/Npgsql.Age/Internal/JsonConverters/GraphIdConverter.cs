@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ApacheAGE.Types;
+using Npgsql.Age.Types;
 
-namespace ApacheAGE.Internal.JsonConverters
+namespace Npgsql.Age.Internal.JsonConverters
 {
     internal class GraphIdConverter : JsonConverter<GraphId>
     {

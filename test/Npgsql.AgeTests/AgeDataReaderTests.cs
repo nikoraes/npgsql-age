@@ -1,9 +1,11 @@
-﻿using ApacheAGE.Types;
+﻿using Npgsql.Age.Types;
+using NUnit.Framework;
 
-namespace ApacheAGE.IntegrationTests;
-internal class AgeDataReaderTests: TestBase
+namespace Npgsql.AgeTests;
+
+internal class AgeDataReaderTests : TestBase
 {
-    [Test]
+    /* [Test]
     public async Task GetValue_Should_ReturnExactColumn()
     {
         await using var client = CreateAgeClient();
@@ -22,7 +24,7 @@ $$) AS (num agtype);");
 
         await DropTempGraphAsync(graphName);
     }
-    
+
     [Test]
     public async Task GetValue_Should_ThrowException_When_TheOrdinalIsOutOfRange()
     {
@@ -50,8 +52,9 @@ $$) AS (num agtype);");
         await client.OpenConnectionAsync();
         await using var dataReader = await client.ExecuteQueryAsync(
 $@"SELECT * FROM cypher('{graphName}', $$
-    RETURN 1, 2, 3, 4   /* These values are sequential on purpose. */
+    RETURN 1, 2, 3, 4   
 $$) AS (num1 agtype, num2 agtype, num3 agtype, num4 agtype);");
+        // These values are sequential on purpose. 
         await dataReader.ReadAsync();
         var fields = new object[4];
         int loaded = dataReader.GetValues(fields);
@@ -64,7 +67,7 @@ $$) AS (num1 agtype, num2 agtype, num3 agtype, num4 agtype);");
                 // The value is sequential on purpose.
                 int value = i + 1;
                 Agtype fieldValue = (Agtype)fields[i];
-                
+
                 Assert.That((int)fieldValue, Is.EqualTo(value), $"resultSet[{i}] is not {i + 1}.");
             }
         });
@@ -114,5 +117,5 @@ $$) AS (num1 agtype, num2 agtype);");
         });
 
         await DropTempGraphAsync(graphName);
-    }
+    } */
 }

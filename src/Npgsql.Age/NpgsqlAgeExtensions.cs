@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ApacheAGE.Internal;
-using ApacheAGE.Resolvers;
+using Npgsql.Age.Internal;
 using Npgsql;
 using Npgsql.TypeMapping;
 
-namespace ApacheAGE
+namespace Npgsql.Age
 {
     public static class NpgsqlAgeExtensions
     {

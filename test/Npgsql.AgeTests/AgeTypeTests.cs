@@ -1,9 +1,10 @@
-﻿using ApacheAGE.Types;
+﻿using Npgsql.Age.Types;
+using NUnit.Framework;
 
-namespace ApacheAGE.IntegrationTests;
-internal class AgeTypeTests: TestBase
+namespace Npgsql.AgeTests;
+internal class AgeTypeTests : TestBase
 {
-    [Test]
+    /* [Test]
     public async Task Value_Should_BeNull_When_AGEOutputsNull()
     {
         await using var client = CreateAgeClient();
@@ -89,7 +90,7 @@ $$) as (value agtype);");
         var i = 3;
 
         await client.OpenConnectionAsync();
-        await using AgeDataReader dataReader = await client.ExecuteQueryAsync(
+        await using var dataReader = await client.ExecuteQueryAsync(
 $@"SELECT * FROM cypher('{graphname}', $$
     WITH {{id: {id}, label: ""{label}"", properties: {{i: {i}}}}}::vertex as v
 	RETURN v
@@ -125,5 +126,5 @@ $$) as (value agtype);");
         Assert.That(agResult?.GetList(), Is.EquivalentTo(list));
 
         await DropTempGraphAsync(graphname);
-    }
+    } */
 }

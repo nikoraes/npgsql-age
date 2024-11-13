@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Npgsql;
 
-namespace ApacheAGE.Internal
+namespace Npgsql.Age.Internal
 {
     internal static class ConnectionInitializer
     {

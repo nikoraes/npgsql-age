@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ApacheAGE.Internal.JsonConverters
+namespace Npgsql.Age.Internal.JsonConverters
 {
     /// <summary>
     /// A custom converter to infer object types from their JSON token type.

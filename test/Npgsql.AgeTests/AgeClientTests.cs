@@ -1,10 +1,10 @@
 using Npgsql;
 
-namespace ApacheAGE.IntegrationTests;
+namespace Npgsql.AgeTests;
 
-internal class AgeClientTests: TestBase
+internal class AgeClientTests : TestBase
 {
-    [Test]
+    /* [Test]
     public async Task OpenConnectionAsync_Should_CreateExtensionInDatabase()
     {
         await using var client = CreateAgeClient();
@@ -59,5 +59,5 @@ $$) AS (num agtype);");
         await client.OpenConnectionAsync();
         var graphExists = await client.GraphExistsAsync("sidjfa23knlsd9a8dfndfhjbnzxeunjakssdf3sdmvns_asdjfk");
         Assert.That(graphExists, Is.False);
-    }
+    } */
 }

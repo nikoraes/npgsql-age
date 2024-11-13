@@ -1,11 +1,11 @@
-﻿using ApacheAGE.Internal.JsonConverters;
+﻿using Npgsql.Age.Internal.JsonConverters;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace ApacheAGE.Types
+namespace Npgsql.Age.Types
 {
     /// <summary>
     /// Represent the <c>ag_catalog.agtype</c> PostgreSQL type.

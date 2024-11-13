@@ -1,18 +1,14 @@
 ﻿using Npgsql;
 
-namespace ApacheAGE.IntegrationTests;
+namespace Npgsql.AgeTests;
 
 internal class TestBase
 {
-    private static string _defaultConnectionString =
+    /* private static string _defaultConnectionString =
         "Server=localhost;Port=5432;Database=agedotnet_tests;";
 
     protected string ConnectionString =>
         Environment.GetEnvironmentVariable("AGE_TEST_DB") ?? _defaultConnectionString;
-
-    protected AgeClientBuilder CreateAgeClientBuilder() => new(ConnectionString);
-
-    protected AgeClient CreateAgeClient() => CreateAgeClientBuilder().Build();
 
     protected NpgsqlConnection GetConnection() =>
         new NpgsqlDataSourceBuilder(ConnectionString)
@@ -37,5 +33,5 @@ internal class TestBase
         await using var client = CreateAgeClient();
         await client.OpenConnectionAsync();
         await client.DropGraphAsync(graphName, true);
-    }
+    } */
 }

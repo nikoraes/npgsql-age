@@ -1,6 +1,7 @@
-﻿using ApacheAGE.Types;
+﻿using Npgsql.Age.Types;
+using NUnit.Framework;
 
-namespace ApacheAGE.UnitTests;
+namespace Npgsql.AgeTests;
 public class AgTypeTests
 {
     #region GetBoolean()
@@ -84,7 +85,7 @@ public class AgTypeTests
     [Test]
     public void GetDouble_Should_ThrowException_When_AgtypeValueIsNull()
     {
-        var agtype = new Agtype(null);
+        var agtype = new Agtype(null!);
 
         Assert.That(() => agtype.GetDouble(), Throws.InstanceOf<NullReferenceException>());
     }
@@ -231,7 +232,7 @@ public class AgTypeTests
             Id = new(2343953235),
             Label = "Person",
             Properties = new()
-            { 
+            {
                 { "name", "Emmanuel" },
                 { "age", 22 },
             },
@@ -303,7 +304,7 @@ public class AgTypeTests
             Label = "Edge_label",
             Properties = [],
         };
-        var agtype = new Agtype($"[{vertices[0]}, {edge}, {vertices[1]}]{Types.Path.FOOTER}");
+        var agtype = new Agtype($"[{vertices[0]}, {edge}, {vertices[1]}]{Age.Types.Path.FOOTER}");
         var path = agtype.GetPath();
 
         Assert.Multiple(() =>

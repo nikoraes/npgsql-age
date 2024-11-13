@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ApacheAGE.Types
+namespace Npgsql.Age.Types
 {
     /// <summary>
     /// Represents the <c>ag_catalog.graphid</c> PostgreSQL type.
     /// </summary>
-    public readonly struct GraphId: IComparable, IComparable<GraphId>
+    public readonly struct GraphId : IComparable, IComparable<GraphId>
     {
         /// <summary>
         /// Creates a new instance of <see cref="GraphId"/>.
@@ -81,7 +81,7 @@ namespace ApacheAGE.Types
         public static bool operator !=(GraphId left, GraphId right)
         {
             return left.Value != right.Value;
-        } 
+        }
         #endregion
     }
 }

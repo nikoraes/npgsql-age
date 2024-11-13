@@ -3,7 +3,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
 
-namespace ApacheAGE.Types
+namespace Npgsql.Age.Types
 {
     /// <summary>
     /// Graph path.
@@ -66,7 +66,7 @@ namespace ApacheAGE.Types
                 if (!shouldBeVertex && path[i].GetType() != typeof(Edge))
                 {
                     throw new FormatException("Invalid path");
-                } 
+                }
             }
         }
     }

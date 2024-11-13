@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ApacheAGE\ApacheAGE.csproj" />
+    <ProjectReference Include="..\..\src\Npgsql.Age\Npgsql.Age.csproj" />
   </ItemGroup>
 
 </Project>

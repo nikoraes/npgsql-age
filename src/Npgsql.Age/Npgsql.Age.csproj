@@ -1,25 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-
     <Authors>Emmanuel Allison, Niko Raes</Authors>
-    <Description>ApacheAGE is a .NET client for use with the AGE extension for PostgreSQL.</Description>
+    <Description>A plugin that extends Npgsql to enable using npgsql the ApacheAge extension for PostgreSQL.</Description>
     <PackageTags>postgres;postgresql;apache-age;graph</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>2.0.0</Version>
-    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Title>ApacheAGE</Title>
+    <Title>Npgsql.Age</Title>
     <Company />
-    <PackageId>ApacheAGE</PackageId>
-    <RepositoryUrl>https://github.com/nikoraes/pg-age</RepositoryUrl>
+    <PackageId>Npgsql.Age</PackageId>
+    <RepositoryUrl>https://github.com/nikoraes/npgsql-age</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <IncludeSymbols>False</IncludeSymbols>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-      
   </PropertyGroup>
 
   <ItemGroup>

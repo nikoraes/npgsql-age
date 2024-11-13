@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-namespace ApacheAGE.Types
+namespace Npgsql.Age.Types
 {
     public struct Vertex
     {

@@ -5,13 +5,11 @@ VisualStudioVersion = 17.8.34004.107
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F6D659A1-FD1D-4EFF-BB4B-D28114D01A97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApacheAGE", "src\ApacheAGE\ApacheAGE.csproj", "{9B5ABDF1-7C23-4E27-AF79-79869D325A99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Npgsql.Age", "src\Npgsql.Age\Npgsql.Age.csproj", "{9B5ABDF1-7C23-4E27-AF79-79869D325A99}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{547E0972-FE1B-49D0-B63D-2E1D394CCECA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{547E0972-FE1B-49D0-B63D-2E1D394CCECA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApacheAGE.UnitTests", "tests\ApacheAGE.UnitTests\ApacheAGE.UnitTests.csproj", "{049D15E7-580B-4307-95DF-992089CBACA9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApacheAGE.IntegrationTests", "tests\ApacheAGE.IntegrationTests\ApacheAGE.IntegrationTests.csproj", "{9F25343E-37A3-43E6-BD7D-AE08F9809FD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Npgsql.AgeTests", "test\Npgsql.AgeTests\Npgsql.AgeTests.csproj", "{049D15E7-580B-4307-95DF-992089CBACA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +25,6 @@ Global
 		{049D15E7-580B-4307-95DF-992089CBACA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{049D15E7-580B-4307-95DF-992089CBACA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{049D15E7-580B-4307-95DF-992089CBACA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F25343E-37A3-43E6-BD7D-AE08F9809FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F25343E-37A3-43E6-BD7D-AE08F9809FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F25343E-37A3-43E6-BD7D-AE08F9809FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F25343E-37A3-43E6-BD7D-AE08F9809FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,7 +32,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9B5ABDF1-7C23-4E27-AF79-79869D325A99} = {F6D659A1-FD1D-4EFF-BB4B-D28114D01A97}
 		{049D15E7-580B-4307-95DF-992089CBACA9} = {547E0972-FE1B-49D0-B63D-2E1D394CCECA}
-		{9F25343E-37A3-43E6-BD7D-AE08F9809FD6} = {547E0972-FE1B-49D0-B63D-2E1D394CCECA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E960FF17-99B2-4BBD-BD3C-B4F99C5F0BA0}

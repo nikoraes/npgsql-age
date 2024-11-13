@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ApacheAGE.Internal.JsonConverters
+namespace Npgsql.Age.Internal.JsonConverters
 {
     internal static class SerializerOptions
     {
