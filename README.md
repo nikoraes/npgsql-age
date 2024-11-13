@@ -1,10 +1,10 @@
-# ApacheAGE
+# Npgsql.Age
 
 [![Nuget](https://img.shields.io/nuget/v/Npgsql.Age?color=blue)](https://www.nuget.org/packages/Npgsql.Age/)
 
 ## What is Apache AGE?
 
-Apache AGE is an open-source extension for PostgreSQL which provides it with the capabilities of a graph database.
+Apache AGE is an open-source extension for PostgreSQL which provides it with the capabilities of a graph database. This package is a plugin for the Npgsql library which allows you to interact with Apache AGE from C#.
 
 ## Quickstart
 
