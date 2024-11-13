@@ -22,7 +22,7 @@ namespace Npgsql.Age.Internal
         protected override Agtype ReadCore(PgReader reader)
         {
             ReadOnlySequence<byte> textBytes = reader.ReadBytes(reader.CurrentRemaining);
-            string text = Encoding.UTF8.GetString(textBytes);
+            string text = Encoding.UTF8.GetString(textBytes.ToArray());
 
             return new(text);
         }
