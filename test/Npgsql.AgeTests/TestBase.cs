@@ -1,39 +1,44 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Configuration;
 using Npgsql.Age;
 
 namespace Npgsql.AgeTests;
 
 internal class TestBase
 {
-    private static string _defaultConnectionString =
-        "Server=localhost;Port=5432;Database=agedotnet_tests;";
+    private readonly NpgsqlDataSource _dataSource;
 
-    protected static string ConnectionString =>
-        Environment.GetEnvironmentVariable("AGE_TEST_DB") ?? _defaultConnectionString;
+    public TestBase()
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.Development.json").Build();
 
-    protected NpgsqlConnection GetConnection() =>
-        new NpgsqlDataSourceBuilder(ConnectionString)
-             .UseAge()
-             .Build()
-             .OpenConnection();
+        string connectionString = Environment.GetEnvironmentVariable("AGE_CONNECTION_STRING")
+            ?? configuration.GetConnectionString("AgeConnectionString")
+            ?? throw new ArgumentNullException("AgeConnectionString");
 
-    protected NpgsqlCommand CreateCommand(string command) =>
-        new(command, GetConnection());
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+        _dataSource = dataSourceBuilder.UseAge(false).Build();
+    }
 
-    /* protected async Task<string> CreateTempGraphAsync()
+    public void Dispose()
+    {
+        _dataSource?.Dispose();
+    }
+
+    public NpgsqlDataSource DataSource => _dataSource;
+
+    protected async Task<string> CreateTempGraphAsync()
     {
         var graphName = "temp_graph" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
-        await using var client = CreateAgeClient();
-        await client.OpenConnectionAsync();
-        await client.CreateGraphAsync(graphName);
-
+        await using var command = _dataSource.CreateGraphCommand(graphName);
+        await command.ExecuteNonQueryAsync();
         return graphName;
     }
 
     protected async Task DropTempGraphAsync(string graphName)
     {
-        await using var client = CreateAgeClient();
-        await client.OpenConnectionAsync();
-        await client.DropGraphAsync(graphName, true);
-    } */
+        await using var command = _dataSource.DropGraphCommand(graphName);
+        await command.ExecuteNonQueryAsync();
+    }
 }

@@ -1,64 +1,52 @@
+using System.ComponentModel;
 using Npgsql;
+using Npgsql.Age;
 using NUnit.Framework;
 
 namespace Npgsql.AgeTests;
 
 internal class AgeClientTests : TestBase
 {
+
     [Test]
-    public async Task OpenConnectionAsync_Should_CreateExtensionInDatabase()
+    public async Task OpenConnectionAsync_ExtensionExists()
     {
-        await using var connection = GetConnection();
-        await using var command = new NpgsqlCommand("DROP EXTENSION IF EXISTS age CASCADE;", connection);
-
-        // First remove the extension from the database if it exists.
-        await command.ExecuteNonQueryAsync();
-        await connection.OpenAsync();
-
-        // Now, check if the extension exists in the database.
-        command.CommandText = "SELECT extname FROM pg_extension WHERE extname = 'age';";
+        // Check if the extension exists in the database.
+        var command = DataSource.CreateCommand("SELECT extname FROM pg_extension WHERE extname = 'age';");
         var result = await command.ExecuteScalarAsync();
 
         Assert.That(result, Is.Not.Null);
     }
 
-    /* 
-        [Test]
-        public async Task ExecuteQueryAsync_With_NoParameters_Should_ReturnDataReader()
-        {
-            await using var client = CreateAgeClient();
-            var graphName = await CreateTempGraphAsync();
 
-            await client.OpenConnectionAsync();
-            await using var dataReader = await client.ExecuteQueryAsync(
-    $@"SELECT * FROM cypher('{graphName}', $$
-        RETURN 1
-    $$) AS (num agtype);");
+    [Test]
+    public async Task GraphExistsAsync_Should_ReturnTrueIfGraphExists()
+    {
+        var graphName = await CreateTempGraphAsync();
+        var graphExistsCommand = DataSource.GraphExistsCommand(graphName);
+        var graphExists = await graphExistsCommand.ExecuteScalarAsync();
+        Assert.That(graphExists, Is.True);
+    }
 
-            Assert.That(dataReader, Is.Not.Null);
-            Assert.That(dataReader.HasRows, Is.True);
+    [Test]
+    public async Task GraphExistsAsync_Should_ReturnFalseIfGraphExists()
+    {
+        var graphName = "sidjfa23knlsd9a8dfndfhjbnzxeunjakssdf3sdmvns_asdjfk";
+        var graphExistsCommand = DataSource.GraphExistsCommand(graphName);
+        var graphExists = await graphExistsCommand.ExecuteScalarAsync();
+        Assert.That(graphExists, Is.False);
+    }
 
-            await DropTempGraphAsync(graphName);
-        }
+    [Test]
+    public async Task ExecuteQueryAsync_With_NoParameters_Should_ReturnDataReader()
+    {
+        var graphName = await CreateTempGraphAsync();
+        var command = DataSource.CreateCypherCommand(graphName, "RETURN 1");
+        var dataReader = await command.ExecuteReaderAsync();
 
-        [Test]
-        public async Task GraphExistsAsync_Should_ReturnTrueIfGraphExists()
-        {
-            await using var client = CreateAgeClient();
-            var graphName = await CreateTempGraphAsync();
+        Assert.That(dataReader, Is.Not.Null);
+        Assert.That(dataReader.HasRows, Is.True);
 
-            await client.OpenConnectionAsync();
-            var graphExists = await client.GraphExistsAsync(graphName);
-            Assert.That(graphExists, Is.True);
-        }
-
-        [Test]
-        public async Task GraphExistsAsync_Should_ReturnFalseIfGraphExists()
-        {
-            await using var client = CreateAgeClient();
-
-            await client.OpenConnectionAsync();
-            var graphExists = await client.GraphExistsAsync("sidjfa23knlsd9a8dfndfhjbnzxeunjakssdf3sdmvns_asdjfk");
-            Assert.That(graphExists, Is.False);
-        } */
+        await DropTempGraphAsync(graphName);
+    }
 }

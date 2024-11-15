@@ -30,28 +30,39 @@ namespace Npgsql.Age
         public static NpgsqlCommand CreateGraphCommand(this NpgsqlDataSource dataSource, string graphName)
         {
             NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.create_graph($1);");
-            command.Parameters.AddWithValue("name", graphName);
+            command.Parameters.AddWithValue(graphName);
             return command;
         }
 
         public static NpgsqlCommand DropGraphCommand(this NpgsqlDataSource dataSource, string graphName)
         {
-            NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.drop_graph($1);");
-            command.Parameters.AddWithValue("name", graphName);
+            NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.drop_graph($1, true);");
+            command.Parameters.AddWithValue(graphName);
             return command;
         }
 
         public static NpgsqlCommand GraphExistsCommand(this NpgsqlDataSource dataSource, string graphName)
         {
-            NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.ag_graph WHERE name = $1;");
-            command.Parameters.AddWithValue("name", graphName);
+            NpgsqlCommand command = dataSource.CreateCommand($"SELECT 1 FROM ag_catalog.ag_graph WHERE name = $1;");
+            command.Parameters.AddWithValue(graphName);
             return command;
         }
 
-        public static NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graph, string cypher)
+        public static async NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graphName, string cypher)
         {
             string asPart = CypherHelpers.GenerateAsPart(cypher);
-            string query = $"SELECT * FROM cypher('{graph}', $$ {cypher} $$) as {asPart};";
+            // LOAD '$libdir/plugins/age';SET search_path = ag_catalog, \"$user\", public;
+            string query = $"SELECT * FROM cypher('{graphName}', $$ {cypher} $$) as {asPart};";
+            var connection = await dataSource.OpenConnectionAsync();
+            connection.StateChange += async (sender, args) =>
+            {
+                if (args.CurrentState == System.Data.ConnectionState.Open)
+                {
+                    var command = connection.CreateCommand();
+                    command.CommandText = "LOAD '$libdir/plugins/age';SET search_path = ag_catalog, \"$user\", public;";
+                    await command.ExecuteNonQueryAsync();
+                }
+            };
             NpgsqlCommand command = dataSource.CreateCommand(query);
             return command;
         }
@@ -108,7 +119,15 @@ namespace Npgsql.Age
             var returnValues = match.Groups[1].Value.Split(',');
 
             // Generate the 'as (...)' part
-            var asPart = string.Join(", ", returnValues.Select((value, index) => $"{value.Trim()} agtype"));
+            var asPart = string.Join(", ", returnValues.Select((value, index) =>
+            {
+                var trimmedValue = value.Trim();
+                if (int.TryParse(trimmedValue, out _) || double.TryParse(trimmedValue, out _))
+                {
+                    return $"num{index} agtype";
+                }
+                return $"{trimmedValue} agtype";
+            }));
             return $"({asPart})";
         }
     }
