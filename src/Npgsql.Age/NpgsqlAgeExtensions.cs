@@ -48,12 +48,12 @@ namespace Npgsql.Age
             return command;
         }
 
-        public static async NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graphName, string cypher)
+        public static NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graphName, string cypher)
         {
             string asPart = CypherHelpers.GenerateAsPart(cypher);
             // LOAD '$libdir/plugins/age';SET search_path = ag_catalog, \"$user\", public;
             string query = $"SELECT * FROM cypher('{graphName}', $$ {cypher} $$) as {asPart};";
-            var connection = await dataSource.OpenConnectionAsync();
+            /* var connection = await dataSource.OpenConnectionAsync();
             connection.StateChange += async (sender, args) =>
             {
                 if (args.CurrentState == System.Data.ConnectionState.Open)
@@ -62,7 +62,7 @@ namespace Npgsql.Age
                     command.CommandText = "LOAD '$libdir/plugins/age';SET search_path = ag_catalog, \"$user\", public;";
                     await command.ExecuteNonQueryAsync();
                 }
-            };
+            }; */
             NpgsqlCommand command = dataSource.CreateCommand(query);
             return command;
         }
