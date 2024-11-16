@@ -17,8 +17,14 @@ internal class TestBase
             ?? configuration.GetConnectionString("AgeConnectionString")
             ?? throw new ArgumentNullException("AgeConnectionString");
 
-        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-        _dataSource = dataSourceBuilder.UseAge(false).Build();
+        NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString)
+        {
+            NoResetOnClose = true
+        };
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionStringBuilder.ConnectionString);
+        _dataSource = dataSourceBuilder
+            .UseAge(false)
+            .Build();
     }
 
     public void Dispose()

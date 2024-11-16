@@ -41,11 +41,17 @@ internal class AgeClientTests : TestBase
     public async Task ExecuteQueryAsync_With_NoParameters_Should_ReturnDataReader()
     {
         var graphName = await CreateTempGraphAsync();
-        var command = DataSource.CreateCypherCommand(graphName, "RETURN 1");
-        var dataReader = await command.ExecuteReaderAsync();
+        await using var command = DataSource.CreateCypherCommand(graphName, "RETURN 1");
+        await using var dataReader = await command.ExecuteReaderAsync();
 
         Assert.That(dataReader, Is.Not.Null);
         Assert.That(dataReader.HasRows, Is.True);
+
+        await using var command2 = DataSource.CreateCypherCommand(graphName, "RETURN 1");
+        await using var dataReader2 = await command2.ExecuteReaderAsync();
+
+        Assert.That(dataReader2, Is.Not.Null);
+        Assert.That(dataReader2.HasRows, Is.True);
 
         await DropTempGraphAsync(graphName);
     }

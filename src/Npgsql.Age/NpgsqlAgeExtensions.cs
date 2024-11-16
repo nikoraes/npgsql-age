@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Npgsql.Age.Internal;
 using Npgsql;
 using Npgsql.TypeMapping;
+using System.Threading.Tasks;
 
 namespace Npgsql.Age
 {
@@ -21,6 +22,7 @@ namespace Npgsql.Age
             builder.UsePhysicalConnectionInitializer(
                 connection => ConnectionInitializer.UsePhysicalConnectionInitializer(connection, superUser),
                 connection => ConnectionInitializer.UsePhysicalConnectionInitializerAsync(connection, superUser));
+
             return builder;
         }
     }
@@ -43,26 +45,22 @@ namespace Npgsql.Age
 
         public static NpgsqlCommand GraphExistsCommand(this NpgsqlDataSource dataSource, string graphName)
         {
-            NpgsqlCommand command = dataSource.CreateCommand($"SELECT 1 FROM ag_catalog.ag_graph WHERE name = $1;");
+            NpgsqlCommand command = dataSource.CreateCommand($"SELECT EXISTS (SELECT 1 FROM ag_catalog.ag_graph WHERE name = $1);");
             command.Parameters.AddWithValue(graphName);
             return command;
+        }
+
+        public static async ValueTask<NpgsqlConnection> OpenAgeConnectionAsync(this NpgsqlDataSource dataSource)
+        {
+            NpgsqlConnection connection = dataSource.CreateConnection();
+            await connection.OpenAsync();
+            return connection;
         }
 
         public static NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graphName, string cypher)
         {
             string asPart = CypherHelpers.GenerateAsPart(cypher);
-            // LOAD '$libdir/plugins/age';SET search_path = ag_catalog, \"$user\", public;
             string query = $"SELECT * FROM cypher('{graphName}', $$ {cypher} $$) as {asPart};";
-            /* var connection = await dataSource.OpenConnectionAsync();
-            connection.StateChange += async (sender, args) =>
-            {
-                if (args.CurrentState == System.Data.ConnectionState.Open)
-                {
-                    var command = connection.CreateCommand();
-                    command.CommandText = "LOAD '$libdir/plugins/age';SET search_path = ag_catalog, \"$user\", public;";
-                    await command.ExecuteNonQueryAsync();
-                }
-            }; */
             NpgsqlCommand command = dataSource.CreateCommand(query);
             return command;
         }
