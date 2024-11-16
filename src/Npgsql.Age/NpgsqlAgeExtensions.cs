@@ -72,7 +72,7 @@ namespace Npgsql.Age
         {
             NpgsqlCommand command = connection.CreateCommand();
             command.CommandText = $"SELECT * FROM ag_catalog.create_graph($1);";
-            command.Parameters.AddWithValue("name", graphName);
+            command.Parameters.AddWithValue(graphName);
             return command;
         }
 
@@ -80,7 +80,7 @@ namespace Npgsql.Age
         {
             NpgsqlCommand command = connection.CreateCommand();
             command.CommandText = $"SELECT * FROM ag_catalog.drop_graph($1);";
-            command.Parameters.AddWithValue("name", graphName);
+            command.Parameters.AddWithValue(graphName);
             return command;
         }
 
@@ -88,7 +88,7 @@ namespace Npgsql.Age
         {
             NpgsqlCommand command = connection.CreateCommand();
             command.CommandText = $"SELECT * FROM ag_catalog.ag_graph WHERE name = $1;";
-            command.Parameters.AddWithValue("name", graphName);
+            command.Parameters.AddWithValue(graphName);
             return command;
         }
 
