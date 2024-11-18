@@ -212,6 +212,14 @@ namespace Npgsql.Age.Types
         }
 
         /// <summary>
+        /// Return true if the agtype is a vertex.
+        /// </summary>
+        /// <returns>
+        /// Boolean value.
+        /// </returns>
+        public bool IsVertex => _value.EndsWith(Vertex.FOOTER);
+
+        /// <summary>
         /// Return the agtype value as a <see cref="Vertex"/>.
         /// </summary>
         /// <returns>
@@ -233,6 +241,14 @@ namespace Npgsql.Age.Types
         }
 
         /// <summary>
+        /// Return true if the agtype is an edge.
+        /// </summary>
+        /// <returns>
+        /// Boolean value.
+        /// </returns>
+        public bool IsEdge => _value.EndsWith(Edge.FOOTER);
+
+        /// <summary>
         /// Return the agtype value as a <see cref="Edge"/>.
         /// </summary>
         /// <returns>
@@ -252,6 +268,14 @@ namespace Npgsql.Age.Types
 
             return edge!;
         }
+
+        /// <summary>
+        /// Return true if the agtype is an edge.
+        /// </summary>
+        /// <returns>
+        /// Boolean value.
+        /// </returns>
+        public bool IsPath => _value.EndsWith(Path.FOOTER);
 
         /// <summary>
         /// Return the agtype value as a path containing vertices and edges.

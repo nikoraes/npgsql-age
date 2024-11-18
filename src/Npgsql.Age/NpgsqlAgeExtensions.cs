@@ -15,7 +15,7 @@ namespace Npgsql.Age
         /// </summary>
         /// <param name="builder">Npgsql data source builder.</param>
         /// <param name="superUser">Whether to use super user privileges.</param>
-        /// <returns></returns>
+        /// <returns>The same builder instance so that multiple calls can be chained</returns>
         public static NpgsqlDataSourceBuilder UseAge(this NpgsqlDataSourceBuilder builder, bool superUser = true)
         {
             builder.AddTypeInfoResolverFactory(new AgtypeResolverFactory());
