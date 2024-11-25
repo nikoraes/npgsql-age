@@ -124,6 +124,10 @@ namespace Npgsql.Age
                 {
                     return $"num{index} agtype";
                 }
+                if (trimmedValue.Any(char.IsUpper))
+                {
+                    return $"\"{trimmedValue}\" agtype";
+                }
                 return $"{trimmedValue} agtype";
             }));
             return $"({asPart})";
