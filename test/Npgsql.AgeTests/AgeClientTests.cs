@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Npgsql;
 using Npgsql.Age;
+using Npgsql.Age.Types;
 using NUnit.Framework;
 
 namespace Npgsql.AgeTests;
@@ -47,11 +48,25 @@ internal class AgeClientTests : TestBase
         Assert.That(dataReader, Is.Not.Null);
         Assert.That(dataReader.HasRows, Is.True);
 
-        await using var command2 = DataSource.CreateCypherCommand(graphName, "RETURN 1");
-        await using var dataReader2 = await command2.ExecuteReaderAsync();
+        await DropTempGraphAsync(graphName);
+    }
 
-        Assert.That(dataReader2, Is.Not.Null);
-        Assert.That(dataReader2.HasRows, Is.True);
+
+    [Test]
+    public async Task ExecuteQueryAsync_ReturnsExpectedResults()
+    {
+        var graphName = await CreateTempGraphAsync();
+        await using var command = DataSource.CreateCypherCommand(graphName, "RETURN 1");
+        await using var dataReader = await command.ExecuteReaderAsync();
+
+        Assert.That(dataReader, Is.Not.Null);
+        Assert.That(dataReader.HasRows, Is.True);
+
+        var schema = await dataReader.GetColumnSchemaAsync();
+
+        Assert.That(await dataReader.ReadAsync(), Is.True);
+        var agResult = await dataReader.GetFieldValueAsync<Agtype?>(0);
+        Assert.That(agResult, Is.Not.Null);
 
         await DropTempGraphAsync(graphName);
     }

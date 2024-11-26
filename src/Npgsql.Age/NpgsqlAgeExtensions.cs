@@ -107,7 +107,8 @@ namespace Npgsql.Age
         internal static string GenerateAsPart(string cypher)
         {
             // Extract the return part of the Cypher query
-            var match = Regex.Match(cypher, @"RETURN\s+(.*)", RegexOptions.IgnoreCase);
+            var match = Regex.Match(cypher, @"RETURN\s+(.*?)(?:\s+LIMIT|\s+SKIP|\s+ORDER|[\[{]|$)", RegexOptions.IgnoreCase);
+
             if (!match.Success)
             {
                 return "(result agtype)";
