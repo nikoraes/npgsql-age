@@ -109,7 +109,7 @@ namespace Npgsql.Age
             // Extract the return part of the Cypher query
             var match = Regex.Match(cypher, @"RETURN\s+(.*?)(?:\s+LIMIT|\s+SKIP|\s+ORDER|[\[{]|$)", RegexOptions.IgnoreCase);
 
-            if (!match.Success || match.Groups[1].Value.Contains('(') || match.Groups[1].Value.Contains('[') || match.Groups[1].Value.Contains('{'))
+            if (!match.Success)
             {
                 return "(result agtype)";
             }
