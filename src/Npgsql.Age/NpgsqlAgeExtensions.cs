@@ -109,7 +109,7 @@ namespace Npgsql.Age
             // Extract the return part of the Cypher query
             var match = Regex.Match(cypher, @"RETURN\s+(.*?)(?:\s+LIMIT|\s+SKIP|\s+ORDER|[\[{]|$)", RegexOptions.IgnoreCase);
 
-            if (!match.Success)
+            if (!match.Success || match.Groups[1].Value.Contains('(') || match.Groups[1].Value.Contains('[') || match.Groups[1].Value.Contains('{'))
             {
                 return "(result agtype)";
             }
@@ -125,11 +125,17 @@ namespace Npgsql.Age
                 {
                     return $"num{index} agtype";
                 }
+                if (Regex.IsMatch(trimmedValue, @"\w+\(.*\)"))
+                {
+                    var exprName = Regex.Match(trimmedValue, @"\w+").Value;
+                    return $"{exprName} agtype"; // TODO: use index or something when there are multiple of the same $"{exprName}{index} agtype";
+                }
                 if (trimmedValue.Any(char.IsUpper))
                 {
                     return $"\"{trimmedValue}\" agtype";
                 }
-                return $"{trimmedValue} agtype";
+                var sanitizedValue = Regex.Replace(trimmedValue, @"[^\w]", "_");
+                return $"{sanitizedValue} agtype";
             }));
             return $"({asPart})";
         }
