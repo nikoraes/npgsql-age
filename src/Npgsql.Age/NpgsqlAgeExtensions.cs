@@ -134,13 +134,8 @@ namespace Npgsql.Age
                     var exprName = Regex.Match(trimmedValue, @"\w+").Value; // TODO: use index or something when there are multiple of the same $"{exprName}{index} agtype";
                     trimmedValue = exprName;
                 }
-                if (trimmedValue.Any(char.IsUpper))
-                {
-                    trimmedValue = $"{trimmedValue}";
-                }
                 var sanitizedValue = Regex.Replace(trimmedValue, @"[^\w]", "_");
 
-                // Check for duplicate column names
                 if (columnNames.ContainsKey(sanitizedValue))
                 {
                     columnNames[sanitizedValue]++;
@@ -149,6 +144,11 @@ namespace Npgsql.Age
                 else
                 {
                     columnNames[sanitizedValue] = 0;
+                }
+
+                if (sanitizedValue.Any(char.IsUpper))
+                {
+                    sanitizedValue = $"\"{sanitizedValue}\"";
                 }
 
                 return $"{sanitizedValue} agtype";
