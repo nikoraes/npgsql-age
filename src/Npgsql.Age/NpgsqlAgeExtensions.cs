@@ -136,7 +136,7 @@ namespace Npgsql.Age
                 }
                 if (trimmedValue.Any(char.IsUpper))
                 {
-                    trimmedValue = $"\"{trimmedValue}\"";
+                    trimmedValue = $"{trimmedValue}";
                 }
                 var sanitizedValue = Regex.Replace(trimmedValue, @"[^\w]", "_");
 
