@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Npgsql;
 using Npgsql.Age;
 using Npgsql.Age.Types;
+using NpgsqlTypes;
 using NUnit.Framework;
 
 namespace Npgsql.AgeTests;
@@ -70,4 +71,17 @@ internal class AgeClientTests : TestBase
 
         await DropTempGraphAsync(graphName);
     }
+
+    [Test]
+    public async Task ExecuteInvalidQueryAsync_Should_ThrowException()
+    {
+        var graphName = await CreateTempGraphAsync();
+        Assert.ThrowsAsync<PostgresException>(async () =>
+        {
+            await using var command = DataSource.CreateCypherCommand(graphName, "INVALID QUERY");
+            await command.ExecuteReaderAsync();
+        });
+        await DropTempGraphAsync(graphName);
+    }
+
 }

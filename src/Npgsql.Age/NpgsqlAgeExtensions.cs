@@ -120,7 +120,7 @@ namespace Npgsql.Age
             // Generate the 'as (...)' part
             var asPart = string.Join(", ", returnValues.Select((value, index) =>
             {
-                var trimmedValue = value.Trim();
+                var trimmedValue = value.Trim().TrimStart('$');
                 if (int.TryParse(trimmedValue, out _) || double.TryParse(trimmedValue, out _))
                 {
                     return $"num{index} agtype";
