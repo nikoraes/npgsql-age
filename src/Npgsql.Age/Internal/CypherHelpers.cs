@@ -42,6 +42,12 @@ namespace Npgsql.Age.Internal
                 {
                     trimmedValue = trimmedValue.Split('.').Last();
                 }
+                // Handle aliases
+                var aliasPattern = @"\s+AS\s+";
+                if (Regex.IsMatch(trimmedValue, aliasPattern, RegexOptions.IgnoreCase))
+                {
+                    trimmedValue = Regex.Split(trimmedValue, aliasPattern, RegexOptions.IgnoreCase).Last();
+                }
                 // Replace special characters with underscores
                 var sanitizedValue = Regex.Replace(trimmedValue, @"[^\w]", "_");
                 // Handle duplicate column names
