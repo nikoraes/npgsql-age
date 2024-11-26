@@ -5,6 +5,7 @@ using Npgsql.Age.Internal;
 using Npgsql;
 using Npgsql.TypeMapping;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Npgsql.Age
 {
@@ -117,24 +118,39 @@ namespace Npgsql.Age
             // Split the return values
             var returnValues = match.Groups[1].Value.Split(',');
 
+            // Dictionary to track occurrences of column names
+            var columnNames = new Dictionary<string, int>();
+
             // Generate the 'as (...)' part
             var asPart = string.Join(", ", returnValues.Select((value, index) =>
             {
                 var trimmedValue = value.Trim().TrimStart('$');
                 if (int.TryParse(trimmedValue, out _) || double.TryParse(trimmedValue, out _))
                 {
-                    return $"num{index} agtype";
+                    trimmedValue = $"num";
                 }
                 if (Regex.IsMatch(trimmedValue, @"\w+\(.*\)"))
                 {
-                    var exprName = Regex.Match(trimmedValue, @"\w+").Value;
-                    return $"{exprName} agtype"; // TODO: use index or something when there are multiple of the same $"{exprName}{index} agtype";
+                    var exprName = Regex.Match(trimmedValue, @"\w+").Value; // TODO: use index or something when there are multiple of the same $"{exprName}{index} agtype";
+                    trimmedValue = exprName;
                 }
                 if (trimmedValue.Any(char.IsUpper))
                 {
-                    return $"\"{trimmedValue}\" agtype";
+                    trimmedValue = $"\"{trimmedValue}\"";
                 }
                 var sanitizedValue = Regex.Replace(trimmedValue, @"[^\w]", "_");
+
+                // Check for duplicate column names
+                if (columnNames.ContainsKey(sanitizedValue))
+                {
+                    columnNames[sanitizedValue]++;
+                    sanitizedValue += columnNames[sanitizedValue].ToString();
+                }
+                else
+                {
+                    columnNames[sanitizedValue] = 0;
+                }
+
                 return $"{sanitizedValue} agtype";
             }));
             return $"({asPart})";
