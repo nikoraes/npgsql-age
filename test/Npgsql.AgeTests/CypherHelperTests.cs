@@ -92,14 +92,25 @@ namespace Npgsql.AgeTests
             Assert.Equal("(\"Name\" agtype, \"Age\" agtype)", result);
         }
 
-
         [Fact]
-        public void GenerateAsPart_WithLineBreaksAndExtraSpaces()
+        public void GenerateAsPart_WithLineBreaks()
         {
             string cypher = @"
         MATCH(r: Twin { `$dtId`: 'room1' })- [rel:rel_has_sensors]->(s: Twin)
         RETURN r, rel, s
         ";
+            string result = CypherHelpers.GenerateAsPart(cypher);
+            Assert.Equal("(r agtype, rel agtype, s agtype)", result);
+        }
+
+        [Fact]
+        public void GenerateAsPart_WithLineBreaksAndExtraSpacesAndLimit()
+        {
+            string cypher = @"
+        MATCH(r: Twin { `$dtId`: 'room1' })- [rel:rel_has_sensors]->(s: Twin)
+        RETURN r,         rel, 
+        s
+LIMIT 10";
             string result = CypherHelpers.GenerateAsPart(cypher);
             Assert.Equal("(r agtype, rel agtype, s agtype)", result);
         }

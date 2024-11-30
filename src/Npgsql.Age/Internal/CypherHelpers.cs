@@ -9,7 +9,7 @@ namespace Npgsql.Age.Internal
         internal static string GenerateAsPart(string cypher)
         {
             // Extract the return part of the Cypher query
-            Match match = Regex.Match(cypher.Replace("\n", "").Replace("\r", ""), @"RETURN\s+(.*?)(?:\s+LIMIT|\s+SKIP|\s+ORDER|[\[{]|$)", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(cypher.Replace("\n", " ").Replace("\r", " "), @"RETURN\s+(.*?)(?:\s+LIMIT|\s+SKIP|\s+ORDER|[\[{]|$)", RegexOptions.IgnoreCase);
 
             if (!match.Success)
             {
