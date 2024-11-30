@@ -3,7 +3,7 @@ using Npgsql.Age;
 
 namespace Npgsql.AgeTests;
 
-internal class TestBase
+public class TestBase
 {
     private readonly NpgsqlDataSource _dataSource;
 
@@ -19,7 +19,7 @@ internal class TestBase
 
         NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString)
         {
-            NoResetOnClose = true
+            SearchPath = "ag_catalog, \"$user\", public",
         };
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionStringBuilder.ConnectionString);
         _dataSource = dataSourceBuilder

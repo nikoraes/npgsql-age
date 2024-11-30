@@ -30,7 +30,7 @@ namespace Npgsql.Age.Internal
             {
                 batch.BatchCommands.Add(new NpgsqlBatchCommand("LOAD '$libdir/plugins/age';"));
             }
-            batch.BatchCommands.Add(new NpgsqlBatchCommand("SET search_path = ag_catalog, \"$user\", public;"));
+            // batch.BatchCommands.Add(new NpgsqlBatchCommand("SET search_path = ag_catalog, \"$user\", public;"));
             await batch.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
     }

@@ -42,6 +42,8 @@ namespace Npgsql.Age.Internal
                 {
                     trimmedValue = trimmedValue.Split('.').Last();
                 }
+                // Trim backticks
+                trimmedValue = trimmedValue.Trim('`');
                 // Handle aliases
                 var aliasPattern = @"\s+AS\s+";
                 if (Regex.IsMatch(trimmedValue, aliasPattern, RegexOptions.IgnoreCase))

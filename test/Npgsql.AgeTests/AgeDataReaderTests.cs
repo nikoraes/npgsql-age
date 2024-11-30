@@ -1,5 +1,4 @@
 ﻿using Npgsql.Age.Types;
-using NUnit.Framework;
 
 namespace Npgsql.AgeTests;
 
