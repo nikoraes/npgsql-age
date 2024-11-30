@@ -5,6 +5,22 @@ namespace Npgsql.AgeTests
     public class CypherHelpersTest
     {
         [Fact]
+        public void GenerateAsPart_SingleReturnValue()
+        {
+            string cypher = "MATCH (n)-[r]->(m) RETURN n";
+            string result = CypherHelpers.GenerateAsPart(cypher);
+            Assert.Equal("(n agtype)", result);
+        }
+
+        [Fact]
+        public void GenerateAsPart_MultipleReturnValues()
+        {
+            string cypher = "MATCH (n)-[r]->(m) RETURN n, r, m";
+            string result = CypherHelpers.GenerateAsPart(cypher);
+            Assert.Equal("(n agtype, r agtype, m agtype)", result);
+        }
+
+        [Fact]
         public void GenerateAsPart_ReturnsResultAgtype_WhenNoReturnPart()
         {
             string cypher = "MATCH (n) WHERE n.name = 'Alice'";
@@ -13,7 +29,7 @@ namespace Npgsql.AgeTests
         }
 
         [Fact]
-        public void GenerateAsPart_SingleReturnValue()
+        public void GenerateAsPart_GenerateAsPart_WithSingleAccessor()
         {
             string cypher = "MATCH (n) RETURN n.name";
             string result = CypherHelpers.GenerateAsPart(cypher);
@@ -21,7 +37,7 @@ namespace Npgsql.AgeTests
         }
 
         [Fact]
-        public void GenerateAsPart_MultipleReturnValues()
+        public void GenerateAsPart_WithMultipleAccessors()
         {
             string cypher = "MATCH (n) RETURN n.name, n.age";
             string result = CypherHelpers.GenerateAsPart(cypher);
