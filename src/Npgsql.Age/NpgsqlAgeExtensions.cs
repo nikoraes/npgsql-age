@@ -55,7 +55,7 @@ namespace Npgsql.Age
         public static NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graphName, string cypher)
         {
             string asPart = CypherHelpers.GenerateAsPart(cypher);
-            string escapedCypher = cypher.Replace("\"", "\\\"").Replace("\u0022", "\\\"");
+            string escapedCypher = cypher.Replace("\"", "\\\"");
             string query = $"SELECT * FROM cypher('{graphName}', $$ {escapedCypher} $$) as {asPart};";
             NpgsqlCommand command = dataSource.CreateCommand(query);
             return command;
@@ -91,7 +91,7 @@ namespace Npgsql.Age
         public static NpgsqlCommand CreateCypherCommand(this NpgsqlConnection connection, string graphName, string cypher)
         {
             string asPart = CypherHelpers.GenerateAsPart(cypher);
-            string escapedCypher = cypher.Replace("\"", "\\\"").Replace("\u0022", "\\\"");
+            string escapedCypher = cypher.Replace("\"", "\\\"");
             string query = $"SELECT * FROM cypher('{graphName}', $$ {escapedCypher} $$) as {asPart};";
             NpgsqlCommand command = connection.CreateCommand();
             command.CommandText = query;
