@@ -76,7 +76,7 @@ namespace Npgsql.Age.Internal
         internal static string EscapeCypher(string cypher)
         {
             // Escape backslashes
-            cypher = cypher.Replace("\\", "\\\\");
+            cypher = Regex.Replace(cypher, @"\\(?!')", "\\\\");
 
             return cypher;
         }

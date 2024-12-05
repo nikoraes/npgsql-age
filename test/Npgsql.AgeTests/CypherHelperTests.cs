@@ -114,5 +114,20 @@ LIMIT 10";
             string result = CypherHelpers.GenerateAsPart(cypher);
             Assert.Equal("(r agtype, rel agtype, s agtype)", result);
         }
+
+
+        [Fact]
+        public void EscapeCypher_EscapesBackslashes()
+        {
+            string cypher = @"WITH '{""dtId"":""abc"",""name"":""weird\n\\""\'name""'}'::agtype as twin
+            MERGE (t: Twin {{`$dtId`: 'abc'}})
+            SET t = twin
+            RETURN t";
+            string result = CypherHelpers.EscapeCypher(cypher);
+            Assert.Equal(@"WITH '{""dtId"":""abc"",""name"":""weird\\n\\\\""\'name""'}'::agtype as twin
+            MERGE (t: Twin {{`$dtId`: 'abc'}})
+            SET t = twin
+            RETURN t", result);
+        }
     }
 }
