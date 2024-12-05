@@ -288,7 +288,7 @@ public class AgTypeTests
 
         Assert.Equal(1, path.Length);
         Assert.Equal(2, path.Vertices.Length);
-        Assert.Equal(1, path.Edges.Length);
+        Assert.Single(path.Edges);
         Assert.Equal(vertices, path.Vertices);
         Assert.Equal(vertices[1].Properties, path.Vertices[1].Properties);
         Assert.Equal(edge, path.Edges[0]);

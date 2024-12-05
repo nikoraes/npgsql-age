@@ -20,7 +20,7 @@ namespace Npgsql.Age.Types
         /// <param name="value"></param>
         public Agtype(string value)
         {
-            _value = value;
+            _value = value.Trim('\u0001');
         }
 
         #region Public methods
@@ -234,7 +234,7 @@ namespace Npgsql.Age.Types
             if (!isValidVertex)
                 throw new FormatException("Cannot convert agtype to vertex. Agtype is not a valid vertex.");
 
-            var json = _value.Replace(Vertex.FOOTER, "").Trim('\u0001');
+            var json = _value.Replace(Vertex.FOOTER, "");
             var vertex = JsonSerializer.Deserialize<Vertex>(json, SerializerOptions.Default);
 
             return vertex!;
@@ -263,7 +263,7 @@ namespace Npgsql.Age.Types
             if (!isValidEdge)
                 throw new FormatException("Cannot convert agtype to edge. Agtype is not a valid edge.");
 
-            var json = _value.Replace(Edge.FOOTER, "").Trim('\u0001');
+            var json = _value.Replace(Edge.FOOTER, "");
             var edge = JsonSerializer.Deserialize<Edge>(json, SerializerOptions.Default);
 
             return edge!;
