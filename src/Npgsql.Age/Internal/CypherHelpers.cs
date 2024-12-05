@@ -72,5 +72,13 @@ namespace Npgsql.Age.Internal
             }));
             return $"({asPart})";
         }
+
+        internal static string EscapeCypher(string cypher)
+        {
+            // Escape backslashes
+            cypher = cypher.Replace("\\", "\\\\");
+
+            return cypher;
+        }
     }
 }
