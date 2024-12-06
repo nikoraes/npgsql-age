@@ -37,14 +37,16 @@ public class TestBase
     protected async Task<string> CreateTempGraphAsync()
     {
         var graphName = "temp_graph" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
-        await using var command = _dataSource.CreateGraphCommand(graphName);
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = connection.CreateGraphCommand(graphName);
         await command.ExecuteNonQueryAsync();
         return graphName;
     }
 
     protected async Task DropTempGraphAsync(string graphName)
     {
-        await using var command = _dataSource.DropGraphCommand(graphName);
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = connection.DropGraphCommand(graphName);
         await command.ExecuteNonQueryAsync();
     }
 }

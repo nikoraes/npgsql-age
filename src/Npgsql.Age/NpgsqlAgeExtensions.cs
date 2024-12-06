@@ -1,4 +1,5 @@
 ﻿using Npgsql.Age.Internal;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Npgsql.Age
@@ -22,78 +23,36 @@ namespace Npgsql.Age
         }
     }
 
-    public static class NpgsqlDataSourceAgeExtensions
-    {
-        public static NpgsqlCommand CreateGraphCommand(this NpgsqlDataSource dataSource, string graphName)
-        {
-            NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.create_graph($1);");
-            command.Parameters.AddWithValue(graphName);
-            return command;
-        }
-
-        public static NpgsqlCommand DropGraphCommand(this NpgsqlDataSource dataSource, string graphName)
-        {
-            NpgsqlCommand command = dataSource.CreateCommand($"SELECT * FROM ag_catalog.drop_graph($1, true);");
-            command.Parameters.AddWithValue(graphName);
-            return command;
-        }
-
-        public static NpgsqlCommand GraphExistsCommand(this NpgsqlDataSource dataSource, string graphName)
-        {
-            NpgsqlCommand command = dataSource.CreateCommand($"SELECT EXISTS (SELECT 1 FROM ag_catalog.ag_graph WHERE name = $1);");
-            command.Parameters.AddWithValue(graphName);
-            return command;
-        }
-
-        public static async ValueTask<NpgsqlConnection> OpenAgeConnectionAsync(this NpgsqlDataSource dataSource)
-        {
-            NpgsqlConnection connection = dataSource.CreateConnection();
-            await connection.OpenAsync();
-            return connection;
-        }
-
-        public static NpgsqlCommand CreateCypherCommand(this NpgsqlDataSource dataSource, string graphName, string cypher)
-        {
-            string asPart = CypherHelpers.GenerateAsPart(cypher);
-            string query = $"SELECT * FROM cypher('{graphName}', $$ {CypherHelpers.EscapeCypher(cypher)} $$) as {asPart};";
-            NpgsqlCommand command = dataSource.CreateCommand(query);
-            return command;
-        }
-    }
-
     public static class NpgsqlConnectionAgeExtensions
     {
         public static NpgsqlCommand CreateGraphCommand(this NpgsqlConnection connection, string graphName)
         {
-            NpgsqlCommand command = connection.CreateCommand();
-            command.CommandText = $"SELECT * FROM ag_catalog.create_graph($1);";
-            command.Parameters.AddWithValue(graphName);
-            return command;
+            return new NpgsqlCommand($"SELECT * FROM ag_catalog.create_graph($1);", connection)
+            {
+                Parameters = { new NpgsqlParameter { Value = graphName } }
+            };
         }
 
         public static NpgsqlCommand DropGraphCommand(this NpgsqlConnection connection, string graphName)
         {
-            NpgsqlCommand command = connection.CreateCommand();
-            command.CommandText = $"SELECT * FROM ag_catalog.drop_graph($1);";
-            command.Parameters.AddWithValue(graphName);
-            return command;
+            return new NpgsqlCommand($"SELECT * FROM ag_catalog.drop_graph($1, true);", connection)
+            {
+                Parameters = { new NpgsqlParameter { Value = graphName } }
+            };
         }
 
         public static NpgsqlCommand GraphExistsCommand(this NpgsqlConnection connection, string graphName)
         {
-            NpgsqlCommand command = connection.CreateCommand();
-            command.CommandText = $"SELECT * FROM ag_catalog.ag_graph WHERE name = $1;";
-            command.Parameters.AddWithValue(graphName);
-            return command;
+            return new NpgsqlCommand($"SELECT EXISTS (SELECT 1 FROM ag_catalog.ag_graph WHERE name = $1);", connection)
+            {
+                Parameters = { new NpgsqlParameter { Value = graphName } }
+            };
         }
 
         public static NpgsqlCommand CreateCypherCommand(this NpgsqlConnection connection, string graphName, string cypher)
         {
-            string asPart = CypherHelpers.GenerateAsPart(cypher);
-            string query = $"SELECT * FROM cypher('{graphName}', $$ {CypherHelpers.EscapeCypher(cypher)} $$) as {asPart};";
-            NpgsqlCommand command = connection.CreateCommand();
-            command.CommandText = query;
-            return command;
+            string query = $"SELECT * FROM cypher('{graphName}', $$ {CypherHelpers.EscapeCypher(cypher)} $$) as {CypherHelpers.GenerateAsPart(cypher)};";
+            return new NpgsqlCommand(query, connection);
         }
     }
 }

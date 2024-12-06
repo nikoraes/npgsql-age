@@ -4,6 +4,17 @@ using Xunit;
 namespace Npgsql.AgeTests;
 public class AgTypeTests
 {
+
+    #region Constructor
+
+    [Fact]
+    public void Constructor_ThrowException_When_AgtypeValueIsNull()
+    {
+        Assert.Throws<NullReferenceException>(() => new Agtype(null!));
+    }
+
+    #endregion
+
     #region GetBoolean()
 
     [Fact]
@@ -74,14 +85,6 @@ public class AgTypeTests
         var agtype = new Agtype("NaN");
 
         Assert.Equal(double.NaN, agtype.GetDouble());
-    }
-
-    [Fact]
-    public void GetDouble_Should_ThrowException_When_AgtypeValueIsNull()
-    {
-        var agtype = new Agtype(null!);
-
-        Assert.Throws<NullReferenceException>(() => agtype.GetDouble());
     }
 
     [Fact]

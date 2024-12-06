@@ -24,7 +24,8 @@ public class AgeIntegrationTests : TestBase
     public async Task GraphExistsAsync_Should_ReturnTrueIfGraphExists()
     {
         var graphName = await CreateTempGraphAsync();
-        var graphExistsCommand = DataSource.GraphExistsCommand(graphName);
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var graphExistsCommand = connection.GraphExistsCommand(graphName);
         var graphExists = await graphExistsCommand.ExecuteScalarAsync();
         Assert.True((bool)graphExists!);
     }
@@ -33,7 +34,8 @@ public class AgeIntegrationTests : TestBase
     public async Task GraphExistsAsync_Should_ReturnFalseIfGraphNotExists()
     {
         var graphName = "sidjfa23knlsd9a8dfndfhjbnzxeunjakssdf3sdmvns_asdjfk";
-        var graphExistsCommand = DataSource.GraphExistsCommand(graphName);
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var graphExistsCommand = connection.GraphExistsCommand(graphName);
         var graphExists = await graphExistsCommand.ExecuteScalarAsync();
         Assert.False((bool)graphExists!);
     }
@@ -44,10 +46,11 @@ public class AgeIntegrationTests : TestBase
 
         var graphname = await CreateTempGraphAsync();
 
-        await using var command = DataSource.CreateCommand(
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = new NpgsqlCommand(
 $@"SELECT * FROM cypher('{graphname}', $$
     RETURN NULL
-$$) as (value agtype);");
+$$) as (value agtype);", connection);
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -63,10 +66,11 @@ $$) as (value agtype);");
     {
         var graphname = await CreateTempGraphAsync();
 
-        await using var command = DataSource.CreateCommand(
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = new NpgsqlCommand(
 $@"SELECT * FROM cypher('{graphname}', $$
         RETURN 'Infinity'::float
-    $$) as (value agtype);");
+    $$) as (value agtype);", connection);
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -82,10 +86,11 @@ $@"SELECT * FROM cypher('{graphname}', $$
     {
         var graphname = await CreateTempGraphAsync();
 
-        await using var command = DataSource.CreateCommand(
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = new NpgsqlCommand(
 $@"SELECT * FROM cypher('{graphname}', $$
             RETURN 'NaN'::float
-        $$) as (value agtype);");
+        $$) as (value agtype);", connection);
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -104,11 +109,12 @@ $@"SELECT * FROM cypher('{graphname}', $$
         var label = "Person";
         var i = 3;
 
-        await using var command = DataSource.CreateCommand(
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = new NpgsqlCommand(
 $@"SELECT * FROM cypher('{graphname}', $$
             WITH {{id: {id}, label: ""{label}"", properties: {{i: {i}}}}}::vertex as v
             RETURN v
-        $$) as (value agtype);");
+        $$) as (value agtype);", connection);
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -129,11 +135,12 @@ $@"SELECT * FROM cypher('{graphname}', $$
         var graphname = await CreateTempGraphAsync();
         var list = new List<object?> { 1, 2, 3, 2, null, };
 
-        await using var command = DataSource.CreateCommand(
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = new NpgsqlCommand(
 $@"SELECT * FROM cypher('{graphname}', $$
             WITH [1, 2, 3, 2, NULL] AS list
             RETURN list
-        $$) as (value agtype);");
+        $$) as (value agtype);", connection);
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -148,7 +155,8 @@ $@"SELECT * FROM cypher('{graphname}', $$
     public async Task ExecuteCypherQueryAsync_With_NoParameters_Should_ReturnDataReader()
     {
         var graphName = await CreateTempGraphAsync();
-        await using var command = DataSource.CreateCypherCommand(graphName, "RETURN 1");
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = connection.CreateCypherCommand(graphName, "RETURN 1");
         await using var dataReader = await command.ExecuteReaderAsync();
 
         Assert.NotNull(dataReader);
@@ -162,7 +170,8 @@ $@"SELECT * FROM cypher('{graphname}', $$
     public async Task ExecuteCypherQueryAsync_ReturnsExpectedResults()
     {
         var graphName = await CreateTempGraphAsync();
-        await using var command = DataSource.CreateCypherCommand(graphName, "RETURN 1");
+        await using var connection = await DataSource.OpenConnectionAsync();
+        await using var command = connection.CreateCypherCommand(graphName, "RETURN 1");
         await using var dataReader = await command.ExecuteReaderAsync();
 
         Assert.NotNull(dataReader);
@@ -183,7 +192,8 @@ $@"SELECT * FROM cypher('{graphname}', $$
         var graphName = await CreateTempGraphAsync();
         await Assert.ThrowsAsync<PostgresException>(async () =>
         {
-            await using var command = DataSource.CreateCypherCommand(graphName, "INVALID QUERY");
+            await using var connection = await DataSource.OpenConnectionAsync();
+            await using var command = connection.CreateCypherCommand(graphName, "INVALID QUERY");
             await command.ExecuteReaderAsync();
         });
         await DropTempGraphAsync(graphName);
