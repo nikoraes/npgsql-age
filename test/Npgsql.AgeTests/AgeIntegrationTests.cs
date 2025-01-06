@@ -8,17 +8,17 @@ namespace Npgsql.AgeTests;
 
 public class AgeIntegrationTests : TestBase
 {
-
     [Fact]
     public async Task OpenConnectionAsync_ExtensionExists()
     {
         // Check if the extension exists in the database.
-        var command = DataSource.CreateCommand("SELECT extname FROM pg_extension WHERE extname = 'age';");
+        var command = DataSource.CreateCommand(
+            "SELECT extname FROM pg_extension WHERE extname = 'age';"
+        );
         var result = await command.ExecuteScalarAsync();
 
         Assert.NotNull(result);
     }
-
 
     [Fact]
     public async Task GraphExistsAsync_Should_ReturnTrueIfGraphExists()
@@ -43,14 +43,15 @@ public class AgeIntegrationTests : TestBase
     [Fact]
     public async Task Value_Should_BeNull_When_AGEOutputsNull()
     {
-
         var graphname = await CreateTempGraphAsync();
 
         await using var connection = await DataSource.OpenConnectionAsync();
         await using var command = new NpgsqlCommand(
-$@"SELECT * FROM cypher('{graphname}', $$
+            $@"SELECT * FROM cypher('{graphname}', $$
     RETURN NULL
-$$) as (value agtype);", connection);
+$$) as (value agtype);",
+            connection
+        );
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -68,9 +69,11 @@ $$) as (value agtype);", connection);
 
         await using var connection = await DataSource.OpenConnectionAsync();
         await using var command = new NpgsqlCommand(
-$@"SELECT * FROM cypher('{graphname}', $$
+            $@"SELECT * FROM cypher('{graphname}', $$
         RETURN 'Infinity'::float
-    $$) as (value agtype);", connection);
+    $$) as (value agtype);",
+            connection
+        );
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -88,9 +91,11 @@ $@"SELECT * FROM cypher('{graphname}', $$
 
         await using var connection = await DataSource.OpenConnectionAsync();
         await using var command = new NpgsqlCommand(
-$@"SELECT * FROM cypher('{graphname}', $$
+            $@"SELECT * FROM cypher('{graphname}', $$
             RETURN 'NaN'::float
-        $$) as (value agtype);", connection);
+        $$) as (value agtype);",
+            connection
+        );
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -111,10 +116,12 @@ $@"SELECT * FROM cypher('{graphname}', $$
 
         await using var connection = await DataSource.OpenConnectionAsync();
         await using var command = new NpgsqlCommand(
-$@"SELECT * FROM cypher('{graphname}', $$
+            $@"SELECT * FROM cypher('{graphname}', $$
             WITH {{id: {id}, label: ""{label}"", properties: {{i: {i}}}}}::vertex as v
             RETURN v
-        $$) as (value agtype);", connection);
+        $$) as (value agtype);",
+            connection
+        );
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -133,14 +140,16 @@ $@"SELECT * FROM cypher('{graphname}', $$
     public async Task GetList_Should_CorrectlyParseNullValues()
     {
         var graphname = await CreateTempGraphAsync();
-        var list = new List<object?> { 1, 2, 3, 2, null, };
+        var list = new List<object?> { 1, 2, 3, 2, null };
 
         await using var connection = await DataSource.OpenConnectionAsync();
         await using var command = new NpgsqlCommand(
-$@"SELECT * FROM cypher('{graphname}', $$
+            $@"SELECT * FROM cypher('{graphname}', $$
             WITH [1, 2, 3, 2, NULL] AS list
             RETURN list
-        $$) as (value agtype);", connection);
+        $$) as (value agtype);",
+            connection
+        );
         await using var dataReader = await command.ExecuteReaderAsync();
         Assert.NotNull(dataReader);
         Assert.True(await dataReader.ReadAsync());
@@ -164,7 +173,6 @@ $@"SELECT * FROM cypher('{graphname}', $$
 
         await DropTempGraphAsync(graphName);
     }
-
 
     [Fact]
     public async Task ExecuteCypherQueryAsync_ReturnsExpectedResults()
@@ -198,5 +206,4 @@ $@"SELECT * FROM cypher('{graphname}', $$
         });
         await DropTempGraphAsync(graphName);
     }
-
 }

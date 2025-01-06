@@ -95,7 +95,8 @@ namespace Npgsql.AgeTests
         [Fact]
         public void GenerateAsPart_WithLineBreaks()
         {
-            string cypher = @"
+            string cypher =
+                @"
         MATCH(r: Twin { `$dtId`: 'room1' })- [rel:rel_has_sensors]->(s: Twin)
         RETURN r, rel, s
         ";
@@ -106,7 +107,8 @@ namespace Npgsql.AgeTests
         [Fact]
         public void GenerateAsPart_WithLineBreaksAndExtraSpacesAndLimit()
         {
-            string cypher = @"
+            string cypher =
+                @"
         MATCH(r: Twin { `$dtId`: 'room1' })- [rel:rel_has_sensors]->(s: Twin)
         RETURN r,         rel, 
         s
@@ -115,19 +117,22 @@ LIMIT 10";
             Assert.Equal("(r agtype, rel agtype, s agtype)", result);
         }
 
-
         [Fact]
         public void EscapeCypher_EscapesBackslashes()
         {
-            string cypher = @"WITH '{""dtId"":""abc"",""name"":""weird\n\\""\'name""'}'::agtype as twin
+            string cypher =
+                @"WITH '{""dtId"":""abc"",""name"":""weird\n\\""\'name""'}'::agtype as twin
             MERGE (t: Twin {{`$dtId`: 'abc'}})
             SET t = twin
             RETURN t";
             string result = CypherHelpers.EscapeCypher(cypher);
-            Assert.Equal(@"WITH '{""dtId"":""abc"",""name"":""weird\\n\\\\""\'name""'}'::agtype as twin
+            Assert.Equal(
+                @"WITH '{""dtId"":""abc"",""name"":""weird\\n\\\\""\'name""'}'::agtype as twin
             MERGE (t: Twin {{`$dtId`: 'abc'}})
             SET t = twin
-            RETURN t", result);
+            RETURN t",
+                result
+            );
         }
     }
 }

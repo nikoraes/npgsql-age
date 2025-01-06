@@ -11,20 +11,20 @@ public class TestBase
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.Development.json").Build();
+            .AddJsonFile("appsettings.Development.json")
+            .Build();
 
-        string connectionString = Environment.GetEnvironmentVariable("AGE_CONNECTION_STRING")
+        string connectionString =
+            Environment.GetEnvironmentVariable("AGE_CONNECTION_STRING")
             ?? configuration.GetConnectionString("AgeConnectionString")
             ?? throw new ArgumentNullException("AgeConnectionString");
 
-        NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString)
-        {
-            SearchPath = "ag_catalog, \"$user\", public",
-        };
-        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionStringBuilder.ConnectionString);
-        _dataSource = dataSourceBuilder
-            .UseAge(false)
-            .Build();
+        NpgsqlConnectionStringBuilder connectionStringBuilder =
+            new(connectionString) { SearchPath = "ag_catalog, \"$user\", public" };
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(
+            connectionStringBuilder.ConnectionString
+        );
+        _dataSource = dataSourceBuilder.UseAge(true).Build();
     }
 
     public void Dispose()

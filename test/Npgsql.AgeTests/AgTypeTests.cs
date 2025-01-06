@@ -2,9 +2,9 @@
 using Xunit;
 
 namespace Npgsql.AgeTests;
+
 public class AgTypeTests
 {
-
     #region Constructor
 
     [Fact]
@@ -168,7 +168,7 @@ public class AgTypeTests
     [Fact]
     public void GetList_Should_ReturnEquivalentList()
     {
-        var list = new List<object?> { 1, 2, "string", null, };
+        var list = new List<object?> { 1, 2, "string", null };
         var agtype = new Agtype("[1, 2, \"string\", null]");
 
         var agtypeList = agtype.GetList();
@@ -199,7 +199,7 @@ public class AgTypeTests
     [Fact]
     public void GetList_Should_ReturnNegativeInfinity_When_Supplied_NegativeInfinity()
     {
-        var list = new List<object?> { 1, 2, double.NegativeInfinity, };
+        var list = new List<object?> { 1, 2, double.NegativeInfinity };
         var agtype = new Agtype("[1, 2, \"-Infinity\"]");
 
         var agtypeList = agtype.GetList(true);
@@ -219,11 +219,7 @@ public class AgTypeTests
         {
             Id = new(2343953235),
             Label = "Person",
-            Properties = new()
-            {
-                { "name", "Emmanuel" },
-                { "age", 22 },
-            },
+            Properties = new() { { "name", "Emmanuel" }, { "age", 22 } },
         };
         var agtype = new Agtype(vertex.ToString());
         var generatedVertex = agtype.GetVertex();
@@ -245,7 +241,7 @@ public class AgTypeTests
             StartId = new(0),
             EndId = new(1),
             Label = "Edge_label",
-            Properties = new() { { "colour", "red" }, },
+            Properties = new() { { "colour", "red" } },
         };
         var agtype = new Agtype(edge.ToString());
         var generatedEdge = agtype.GetEdge();
@@ -269,14 +265,14 @@ public class AgTypeTests
             {
                 Id = new(0),
                 Label = "Label_name_1",
-                Properties = new() { { "i", 0 }, },
+                Properties = new() { { "i", 0 } },
             },
             new Vertex
             {
                 Id = new(2),
                 Label = "Label_name_1",
                 Properties = [],
-            }
+            },
         ];
         var edge = new Edge
         {
@@ -306,17 +302,14 @@ public class AgTypeTests
             {
                 Id = new(0),
                 Label = "Label_name_1",
-                Properties = new()
-                {
-                    { "i", 0 },
-                },
+                Properties = new() { { "i", 0 } },
             },
             new Vertex
             {
                 Id = new(2),
                 Label = "Label_name_1",
                 Properties = [],
-            }
+            },
         ];
         var edge = new Edge
         {
