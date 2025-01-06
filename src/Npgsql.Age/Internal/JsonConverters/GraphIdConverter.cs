@@ -7,7 +7,11 @@ namespace Npgsql.Age.Internal.JsonConverters
 {
     internal class GraphIdConverter : JsonConverter<GraphId>
     {
-        public override GraphId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override GraphId Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
             if (reader.TokenType == JsonTokenType.Number)
             {
@@ -18,7 +22,11 @@ namespace Npgsql.Age.Internal.JsonConverters
             throw new InvalidCastException("Cannot parse JSON value to GraphId.");
         }
 
-        public override void Write(Utf8JsonWriter writer, GraphId value, JsonSerializerOptions options)
+        public override void Write(
+            Utf8JsonWriter writer,
+            GraphId value,
+            JsonSerializerOptions options
+        )
         {
             writer.WriteNumberValue(value.Value);
         }

@@ -9,13 +9,17 @@ namespace Npgsql.Age.Internal.JsonConverters
     /// A custom converter to infer object types from their JSON token type.
     /// <para>
     /// For example, numbers in the json will be returned as a valid number type
-    /// in C# (<see langword="int"/>, <see langword="long"/>, <see langword="decimal"/>, or 
+    /// in C# (<see langword="int"/>, <see langword="long"/>, <see langword="decimal"/>, or
     /// <see langword="double"/>).
     /// </para>
     /// </summary>
     internal class InferredObjectConverter : JsonConverter<object>
     {
-        public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override object? Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
             switch (reader.TokenType)
             {
@@ -25,11 +29,24 @@ namespace Npgsql.Age.Internal.JsonConverters
 
                 // Parse 'Infinity', '-Infinity', and 'NaN' as doubles instead of strings if required.
                 case JsonTokenType.String:
-                    if ((options.NumberHandling & JsonNumberHandling.AllowNamedFloatingPointLiterals) != 0)
+                    if (
+                        (
+                            options.NumberHandling
+                            & JsonNumberHandling.AllowNamedFloatingPointLiterals
+                        ) != 0
+                    )
                     {
-                        if (reader.GetString()!.Equals("Infinity", StringComparison.OrdinalIgnoreCase))
+                        if (
+                            reader
+                                .GetString()!
+                                .Equals("Infinity", StringComparison.OrdinalIgnoreCase)
+                        )
                             return double.PositiveInfinity;
-                        if (reader.GetString()!.Equals("-Infinity", StringComparison.OrdinalIgnoreCase))
+                        if (
+                            reader
+                                .GetString()!
+                                .Equals("-Infinity", StringComparison.OrdinalIgnoreCase)
+                        )
                             return double.NegativeInfinity;
                         if (reader.GetString()!.Equals("NaN", StringComparison.OrdinalIgnoreCase))
                             return double.NaN;
@@ -64,7 +81,11 @@ namespace Npgsql.Age.Internal.JsonConverters
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+        public override void Write(
+            Utf8JsonWriter writer,
+            object value,
+            JsonSerializerOptions options
+        )
         {
             JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }

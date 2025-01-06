@@ -27,15 +27,16 @@ namespace Npgsql.Age.Types
         /// </summary>
         public Dictionary<string, object?> Properties { get; set; }
 
-        public readonly override string ToString()
+        public override readonly string ToString()
         {
             string serializedProperties = JsonSerializer.Serialize(Properties);
-            string result = $@"{{""id"": {Id.Value}, ""label"": ""{Label}"", ""properties"": {serializedProperties}}}::vertex";
+            string result =
+                $@"{{""id"": {Id.Value}, ""label"": ""{Label}"", ""properties"": {serializedProperties}}}::vertex";
 
             return result;
         }
 
-        public readonly override bool Equals([NotNullWhen(true)] object? obj)
+        public override readonly bool Equals([NotNullWhen(true)] object? obj)
         {
             if (obj is null || obj is not Vertex)
                 return false;

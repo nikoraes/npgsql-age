@@ -1,9 +1,9 @@
-﻿using Npgsql.Age.Internal.JsonConverters;
+﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Npgsql.Age.Internal.JsonConverters;
 
 namespace Npgsql.Age.Types
 {
@@ -184,12 +184,12 @@ namespace Npgsql.Age.Types
         /// <summary>
         /// Return the agtype value as a list.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The list may contain mixed data types.
         /// Example: [1, 2, "string", null].
         /// </remarks>
-        /// 
+        ///
         /// <param name="readFloatingPointLiterals">
         /// Indicates if the reserved floating values "-Infinity", "Infinity",
         /// and "NaN" should be parsed to <see cref="double.NegativeInfinity"/>,
@@ -200,13 +200,16 @@ namespace Npgsql.Age.Types
         /// strings.
         /// </para>
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// List of objects.
         /// </returns>
         public List<object?> GetList(bool readFloatingPointLiterals = true)
         {
-            var result = JsonSerializer.Deserialize<List<object?>>(_value, SerializerOptions.Default);
+            var result = JsonSerializer.Deserialize<List<object?>>(
+                _value,
+                SerializerOptions.Default
+            );
 
             return result!;
         }
@@ -232,7 +235,9 @@ namespace Npgsql.Age.Types
         {
             bool isValidVertex = _value.EndsWith(Vertex.FOOTER);
             if (!isValidVertex)
-                throw new FormatException("Cannot convert agtype to vertex. Agtype is not a valid vertex.");
+                throw new FormatException(
+                    "Cannot convert agtype to vertex. Agtype is not a valid vertex."
+                );
 
             var json = _value.Replace(Vertex.FOOTER, "");
             var vertex = JsonSerializer.Deserialize<Vertex>(json, SerializerOptions.Default);
@@ -261,7 +266,9 @@ namespace Npgsql.Age.Types
         {
             bool isValidEdge = _value.EndsWith(Edge.FOOTER);
             if (!isValidEdge)
-                throw new FormatException("Cannot convert agtype to edge. Agtype is not a valid edge.");
+                throw new FormatException(
+                    "Cannot convert agtype to edge. Agtype is not a valid edge."
+                );
 
             var json = _value.Replace(Edge.FOOTER, "");
             var edge = JsonSerializer.Deserialize<Edge>(json, SerializerOptions.Default);
@@ -290,7 +297,9 @@ namespace Npgsql.Age.Types
         {
             bool isValidEdge = _value.EndsWith(Path.FOOTER);
             if (!isValidEdge)
-                throw new FormatException("Cannot convert agtype to path. Agtype is not a valid path.");
+                throw new FormatException(
+                    "Cannot convert agtype to path. Agtype is not a valid path."
+                );
 
             try
             {
@@ -298,15 +307,19 @@ namespace Npgsql.Age.Types
                     .Replace(Vertex.FOOTER, "")
                     .Replace(Path.FOOTER, "")
                     .Replace(Edge.FOOTER, "");
-                var path = JsonSerializer.Deserialize<object[]>(json, SerializerOptions.PathSerializer);
+                var path = JsonSerializer.Deserialize<object[]>(
+                    json,
+                    SerializerOptions.PathSerializer
+                );
 
-                return path is null
-                    ? throw new Exception("Path cannot be null.")
-                    : new Path(path);
+                return path is null ? throw new Exception("Path cannot be null.") : new Path(path);
             }
             catch (JsonException e)
             {
-                throw new FormatException("Path may be in the wrong format and cannot be parsed correctly.", e);
+                throw new FormatException(
+                    "Path may be in the wrong format and cannot be parsed correctly.",
+                    e
+                );
             }
         }
         #endregion
@@ -342,7 +355,5 @@ namespace Npgsql.Age.Types
 
         public static explicit operator Edge(Agtype agtype) => agtype.GetEdge();
         #endregion
-
-
     }
 }

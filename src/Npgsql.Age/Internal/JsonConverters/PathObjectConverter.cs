@@ -13,7 +13,11 @@ namespace Npgsql.Age.Internal.JsonConverters
     {
         private int _counter = 0;
 
-        public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override object? Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
             /*
              * Every path consists of vertices and edges. It is certain that
@@ -21,7 +25,7 @@ namespace Npgsql.Age.Internal.JsonConverters
              * certain that an edge exists between two contiguous vertices.
              * Therefore, a path will look like this:
              * path = v -> e -> v ->...-> v -> e -> v.
-             * 
+             *
              * Because of this, if we use a zero-based counter, we can be sure that
              * all vertices will fall on even numbers and edges will fall on odd numbers.
              */
@@ -38,7 +42,11 @@ namespace Npgsql.Age.Internal.JsonConverters
             return result;
         }
 
-        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+        public override void Write(
+            Utf8JsonWriter writer,
+            object value,
+            JsonSerializerOptions options
+        )
         {
             JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }

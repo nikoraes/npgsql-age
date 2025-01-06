@@ -18,6 +18,7 @@ namespace Npgsql.Age.Internal
     internal class AgtypeResolverFactory : PgTypeInfoResolverFactory
     {
         public override IPgTypeInfoResolver CreateResolver() => new Resolver();
+
         public override IPgTypeInfoResolver? CreateArrayResolver() => new ArrayResolver();
 
         private class Resolver : IPgTypeInfoResolver
@@ -27,13 +28,20 @@ namespace Npgsql.Age.Internal
             TypeInfoMappingCollection? _mappings;
             protected TypeInfoMappingCollection Mappings => _mappings ??= AddMappings(new());
 
-            public PgTypeInfo? GetTypeInfo(Type? type, DataTypeName? dataTypeName, PgSerializerOptions options)
-                => Mappings.Find(type, dataTypeName, options);
+            public PgTypeInfo? GetTypeInfo(
+                Type? type,
+                DataTypeName? dataTypeName,
+                PgSerializerOptions options
+            ) => Mappings.Find(type, dataTypeName, options);
 
             static TypeInfoMappingCollection AddMappings(TypeInfoMappingCollection mappings)
             {
-                mappings.AddStructType<Agtype>(AgtypeDataTypeName,
-                    static (options, mapping, _) => mapping.CreateInfo(options, new AgtypeConverter()), MatchRequirement.DataTypeName);
+                mappings.AddStructType<Agtype>(
+                    AgtypeDataTypeName,
+                    static (options, mapping, _) =>
+                        mapping.CreateInfo(options, new AgtypeConverter()),
+                    MatchRequirement.DataTypeName
+                );
 
                 return mappings;
             }
@@ -44,8 +52,11 @@ namespace Npgsql.Age.Internal
             TypeInfoMappingCollection? _mappings;
             new TypeInfoMappingCollection Mappings => _mappings ??= AddMappings(new(base.Mappings));
 
-            public new PgTypeInfo? GetTypeInfo(Type? type, DataTypeName? dataTypeName, PgSerializerOptions options)
-                => Mappings.Find(type, dataTypeName, options);
+            public new PgTypeInfo? GetTypeInfo(
+                Type? type,
+                DataTypeName? dataTypeName,
+                PgSerializerOptions options
+            ) => Mappings.Find(type, dataTypeName, options);
 
             static TypeInfoMappingCollection AddMappings(TypeInfoMappingCollection mappings)
             {
